@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class MissionImpossible extends SearchProblem {
 	public MissionImpossible() {
@@ -15,7 +17,7 @@ public class MissionImpossible extends SearchProblem {
 		outputGrid += xAxis + "," + yAxis + ";";
 
 		// Adding Ethan's location ranging between the x and y axes
-		// to the output string as ex,ey indexed (4,6)
+		// to the output string as ex, ey indexed (4,6)
 		int ethanXlocation = (int) (Math.random() * xAxis);
 		int ethanYlocation = (int) (Math.random() * yAxis);
 		outputGrid += ethanXlocation + "," + ethanYlocation + ";";
@@ -44,9 +46,10 @@ public class MissionImpossible extends SearchProblem {
 				int newMemberXlocation = (int) (Math.random() * (xAxis + 1));
 				int newMemberYlocation = (int) (Math.random() * (yAxis + 1));
 				String checkMemberPosition = newMemberXlocation + "," + newMemberYlocation;
+				List<String> gridArray = Arrays.asList(outputGrid.replace(";",",").split("(?<!\\G\\d+),"));
 				if (!outputGrid.contains(checkMemberPosition)) {
 					outputGrid += newMemberXlocation + "," + newMemberYlocation;
-					health += (int) (Math.random() * 9) + 1;
+					health += (int) (Math.random() * 99) + 1;
 					if (i == imfMembers - 1) {
 						health += ";";
 					} else {
@@ -63,8 +66,13 @@ public class MissionImpossible extends SearchProblem {
 		outputGrid += truckCarry;
 		return outputGrid;
 	}
-//	public static void main(String[]ars) {
-//		String test = genGrid();
-//		System.out.println(test);
-//	}
+	public static void main(String[]ars) {
+		String test = genGrid();
+		String[] s = test.replace(";",",").split("(?<!\\G\\d+),");
+		for(String l:s) {
+			System.out.println(l);
+		}
+		
+	
+	}
 }
