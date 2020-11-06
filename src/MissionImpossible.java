@@ -1,4 +1,5 @@
 import java.util.*;
+import SearchTreeNode; 
 import java.util.Arrays;
 import java.util.List;
 
@@ -66,13 +67,49 @@ public class MissionImpossible extends SearchProblem {
 		outputGrid += truckCarry;
 		return outputGrid;
 	}
-	public static void main(String[]ars) {
-		String test = genGrid();
-		String[] s = test.replace(";",",").split("(?<!\\G\\d+),");
-		for(String l:s) {
-			System.out.println(l);
-		}
-		
 	
+	public static SearchTreeNode[] stateTransition(SearchTreeNode state, String grid) {
+		SearchTreeNode [] stateSpace;
+		String[] splittedGrid = grid.split(";");
+		boolean isTop = isTop(splittedGrid[1]);
+		boolean isLeft = isLeft(splittedGrid[1]);
+		boolean isDown = isDown(splittedGrid[0],splittedGrid[1]);
+		boolean isRight = isRight(splittedGrid[0],splittedGrid[1]);
+
+		return null;
+		
+		
+
+	}
+	public static boolean isTop(String ethanPos) {
+		if(ethanPos.charAt(0) == '0') {
+			return true;
+		}
+		return false;
+	}
+	public static boolean isDown(String maxGrid, String ethanPos) {
+		if(ethanPos.charAt(0) == maxGrid.charAt(0)) {
+			return true;
+		}
+		return false;
+	}
+	public static boolean isLeft(String ethanPos) {
+		if(ethanPos.charAt(2) == '0') {
+			return true;
+		}
+		return false;
+	}
+	public static boolean isRight(String maxGrid, String ethanPos) {
+		if(ethanPos.charAt(2) == maxGrid.charAt(0)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static void main(String[]args) {
+		
+		String test = genGrid();
+		System.out.println(test);
+		
 	}
 }
