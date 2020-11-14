@@ -5,20 +5,21 @@ import java.util.Arrays;
 
 public abstract class SearchProblem {
 	
-	public static String BFS(SearchTreeNode initialState, String grid,String[] goal) {
+	public static String BFS(SearchTreeNode initialState,String grid,String[] goal) {
 		String result = "";
 		Queue<SearchTreeNode> toTraverse = new LinkedList<SearchTreeNode>();
 		ArrayList<String> prevStates = new ArrayList<String>();
 		SearchTreeNode currentState = initialState;
 		int counter = 0;
-		
 		while(!Arrays.equals(goal,currentState.getState())) {
 			System.out.println();
 			System.out.println();
 			ArrayList<SearchTreeNode> stateSpace = MissionImpossible.stateTransition(currentState,grid);
 			for(int i = 0; i< stateSpace.size();i++) {
 				String tempState = stateSpace.get(i).getState()[0]+","+stateSpace.get(i).getState()[1]+","+stateSpace.get(i).getState()[2]+","+stateSpace.get(i).getState()[3];
+				
 				if(!prevStates.contains(tempState)) {
+					System.out.println(tempState);
 					toTraverse.add(stateSpace.get(i));
 					prevStates.add(tempState);
 				}
@@ -48,14 +49,13 @@ public abstract class SearchProblem {
 	}
 	public static void main(String[]args) {
 		MissionImpossible m = new MissionImpossible();
-//		String grid = m.genGrid();
 		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
 		String submarine = grid.split(";")[2];
 		String ethan = grid.split(";")[1];
-		String[] goal = {submarine.split(",")[0],submarine.split(",")[1],"0",grid.split(";")[5]};
+		String[] goal = {submarine.split(",")[0],submarine.split(",")[1],"0","0"};
 		String[] members = grid.split(";")[3].split(",");
 		int membersNum = members.length/2;
-		String[] state = {ethan.split(",")[0],ethan.split(",")[1],""+membersNum,grid.split(";")[5]};
+		String[] state = {ethan.split(",")[0],ethan.split(",")[1],""+membersNum,"0"};
 		SearchTreeNode init = new SearchTreeNode(state,null,null,0,0);
 		System.out.print(BFS(init,grid,goal));
 	}

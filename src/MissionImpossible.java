@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MissionImpossible extends SearchProblem {
+	static List<String> pickedIMF = new ArrayList<String>();
 	public MissionImpossible() {
 
 	}
@@ -143,7 +144,8 @@ public class MissionImpossible extends SearchProblem {
 		int posIMF = 0;
 		String posEthanAndIMF = parentState[0] + "," + parentState[1] ;
 		while(posIMF < gridArray.size()) {
-			if(gridArray.get(posIMF).equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ) && (Integer.parseInt(parentState[2]) > 0)) { // Creating carry state
+			if(gridArray.get(posIMF).equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ) && (Integer.parseInt(parentState[2]) > 0) && !pickedIMF.contains(gridArray.get(posIMF))) { // Creating carry state
+				pickedIMF.add(gridArray.get(posIMF));
 				int ethX = Integer.parseInt(parentState[0]);
 				int ethY = Integer.parseInt(parentState[1]);
 				String remainingIMF = parentState[2];
@@ -162,8 +164,7 @@ public class MissionImpossible extends SearchProblem {
 			
 			posIMF++;
 		}
-		
-		if(gridArray.get(2).equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) > 0)) { // Creating drop state
+		if(splittedGrid[2].equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) > 0)) { // Creating drop state
 			int ethX = Integer.parseInt(parentState[0]);
 			int ethY = Integer.parseInt(parentState[1]);
 			String remainingIMF = parentState[2];
@@ -205,7 +206,6 @@ public class MissionImpossible extends SearchProblem {
 	}
 	public static boolean isRight(String maxGrid, String ethanPos) {
 		if(ethanPos.charAt(0) == maxGrid.charAt(0)) {
-
 			return true;
 		}
 		return false;
