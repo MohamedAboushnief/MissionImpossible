@@ -47,7 +47,7 @@ public class MissionImpossible extends SearchProblem {
 				int newMemberYlocation = (int) (Math.random() * (yAxis + 1));
 				String checkMemberPosition = newMemberXlocation + "," + newMemberYlocation;
 				List<String> gridArray = Arrays.asList(outputGrid.replace(";",",").split("(?<!\\G\\d+),"));
-				if (!outputGrid.contains(checkMemberPosition)) {
+				if (!gridArray.contains(checkMemberPosition)) {
 					outputGrid += newMemberXlocation + "," + newMemberYlocation;
 					health += (int) (Math.random() * 99) + 1;
 					if (i == imfMembers - 1) {
@@ -67,15 +67,115 @@ public class MissionImpossible extends SearchProblem {
 		return outputGrid;
 	}
 	
-	public static SearchTreeNode[] stateTransition(SearchTreeNode state, String grid) {
-		SearchTreeNode [] stateSpace;
+	public static ArrayList<SearchTreeNode> stateTransition(SearchTreeNode state, String grid) {
+		ArrayList<SearchTreeNode> stateSpace = new ArrayList<SearchTreeNode>();
 		String[] splittedGrid = grid.split(";");
 		boolean isTop = isTop(splittedGrid[1]);
 		boolean isLeft = isLeft(splittedGrid[1]);
 		boolean isDown = isDown(splittedGrid[0],splittedGrid[1]);
 		boolean isRight = isRight(splittedGrid[0],splittedGrid[1]);
 
-		return null;
+		String[] parentState = state.getState();
+		int parentDepth = state.getDepth();
+		int costToRoot = state.getCostToRoot();
+
+		if(!isTop) {   // Creating up state
+			int ethX = Integer.parseInt(parentState[0]);
+			int ethY = Integer.parseInt(parentState[1]);
+			String remainingIMF = parentState[2];
+			String noOfcarry = parentState[3];
+			int newDepth = parentDepth + 1;
+			String[] newState = new String[4];
+			newState[0] = (ethX - 1) + "";
+			newState[1] = ethY  + "";
+			newState[2] = remainingIMF;
+			newState[3] = noOfcarry;
+			SearchTreeNode up = new SearchTreeNode(newState,state,"Up",newDepth,costToRoot);
+			stateSpace.add(up);
+		}
+		if(!isLeft) {   // Creating left state
+			int ethX = Integer.parseInt(parentState[0]);
+			int ethY = Integer.parseInt(parentState[1]);
+			String remainingIMF = parentState[2];
+			String noOfcarry = parentState[3];
+			int newDepth = parentDepth + 1;
+			String[] newState = new String[4];
+			newState[0] = ethX + "";
+			newState[1] = (ethY - 1)  + "";
+			newState[2] = remainingIMF;
+			newState[3] = noOfcarry;
+			SearchTreeNode left = new SearchTreeNode(newState,state,"Left",newDepth,costToRoot);
+			stateSpace.add(left);
+		}
+		if(!isDown) {  // Creating down state
+			int ethX = Integer.parseInt(parentState[0]);
+			int ethY = Integer.parseInt(parentState[1]);
+			String remainingIMF = parentState[2];
+			String noOfcarry = parentState[3];
+			int newDepth = parentDepth + 1;
+			String[] newState = new String[4];
+			newState[0] = (ethX + 1) + "";
+			newState[1] = ethY   + "";
+			newState[2] = remainingIMF;
+			newState[3] = noOfcarry;
+			SearchTreeNode down = new SearchTreeNode(newState,state,"Down",newDepth,costToRoot);
+			stateSpace.add(down);		
+		}
+		if(!isRight) { // Creating right state
+			int ethX = Integer.parseInt(parentState[0]);
+			int ethY = Integer.parseInt(parentState[1]);
+			String remainingIMF = parentState[2];
+			String noOfcarry = parentState[3];
+			int newDepth = parentDepth + 1;
+			String[] newState = new String[4];
+			newState[0] = ethX + "";
+			newState[1] = (ethY + 1)  + "";
+			newState[2] = remainingIMF;
+			newState[3] = noOfcarry;
+			SearchTreeNode right = new SearchTreeNode(newState,state,"Right",newDepth,costToRoot);
+			stateSpace.add(right);
+		}
+		
+		List<String> gridArray = Arrays.asList(grid.replace(";",",").split("(?<!\\G\\d+),"));
+		int posIMF = 3;
+		String posEthanAndIMF = "(" + parentState[0] + "," + parentState[1] + ")";
+		while(posIMF < gridArray.size()) {
+			if(gridArray.get(posIMF).equals(posEthanAndIMF)) { // Creating carry state
+				int ethX = Integer.parseInt(parentState[0]);
+				int ethY = Integer.parseInt(parentState[1]);
+				String remainingIMF = parentState[2];
+				String noOfcarry = parentState[3];
+				int newDepth = parentDepth + 1;
+				String[] newState = new String[4];
+				newState[0] = ethX + "";
+				newState[1] = ethY + "";
+				int newRemainingIMF = Integer.parseInt(remainingIMF) - 1;
+				newState[2] = newRemainingIMF + "";
+				int newNoOfCarry = Integer.parseInt(noOfcarry) + 1;
+				newState[3] = newNoOfCarry + "";
+				SearchTreeNode carry = new SearchTreeNode(newState,state,"Carry",newDepth,costToRoot);
+				stateSpace.add(carry);
+			}
+			
+			posIMF++;
+		}
+		
+		if(gridArray.get(2).equals(posEthanAndIMF)) { // Creating drop state
+			int ethX = Integer.parseInt(parentState[0]);
+			int ethY = Integer.parseInt(parentState[1]);
+			String remainingIMF = parentState[2];
+			String noOfcarry = parentState[3];
+			int newDepth = parentDepth + 1;
+			String[] newState = new String[4];
+			newState[0] = ethX + "";
+			newState[1] = ethY + "";
+			newState[2] = remainingIMF;
+			int newNoOfCarry = Integer.parseInt(noOfcarry) - 1;
+			newState[3] = newNoOfCarry + "";
+			SearchTreeNode drop = new SearchTreeNode(newState,state,"Drop",newDepth,costToRoot);
+			stateSpace.add(drop);
+		}
+		return stateSpace;
 		
 		
 
