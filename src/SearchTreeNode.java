@@ -1,11 +1,13 @@
+
+
 public class SearchTreeNode {
 	private String[] state;
-	private String parentNode;
+	private SearchTreeNode parentNode;
 	private String operator;
 	private int depth;
 	private int costToRoot;
 
-	public SearchTreeNode(String[] state, String parentNode, String operator, int depth, int costToRoot) {
+	public SearchTreeNode(String[] state, SearchTreeNode parentNode, String operator, int depth, int costToRoot) {
 		this.state = state;
 		this.parentNode = parentNode;
 		this.operator = operator;
@@ -21,11 +23,11 @@ public class SearchTreeNode {
 		this.state = state;
 	}
 
-	public String getParentNode() {
+	public SearchTreeNode getParentNode() {
 		return parentNode;
 	}
 
-	public void setParentNode(String parentNode) {
+	public void setParentNode(SearchTreeNode parentNode) {
 		this.parentNode = parentNode;
 	}
 

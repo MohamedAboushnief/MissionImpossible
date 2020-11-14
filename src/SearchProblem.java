@@ -4,22 +4,55 @@ import java.util.ArrayList;
 
 public abstract class SearchProblem {
 	
-	public String BFS(SearchTreeNode initialState, String grid,SearchTreeNode goal) {
+	public static String BFS(SearchTreeNode initialState, String grid,String[] goal) {
 		String result = "";
 		Queue<SearchTreeNode> toTraverse = new LinkedList<SearchTreeNode>();
+		ArrayList<SearchTreeNode> prevStates = new ArrayList<SearchTreeNode>();
 		SearchTreeNode currentState = initialState;
-		while(goal != currentState) {
-			ArrayList<SearchTreeNode> stateSpace = stateTransition(currentState,grid);
+		System.out.println(goal);
+		int counter = 0;
+		
+		while(!goal.equals(currentState.getState())) {
+			for(int i = 0;i<goal.length;i++) {
+				System.out.print(goal[i] + "    " + currentState.getState()[i]);
+				System.out.println();
+			}
+			System.out.println();
+			System.out.println();
+			ArrayList<SearchTreeNode> stateSpace = MissionImpossible.stateTransition(currentState,grid);
 			for(int i = 0; i< stateSpace.size();i++) {
-				toTraverse.add(stateSpace.get(i));
+				if(!currentState.equals(stateSpace.get(i))) {
+					toTraverse.add(stateSpace.get(i));
+//					prevStates.add(stateSpace.get(i));
+				}
+			}
+			if(counter>100000) {
+				break;
 			}
 			currentState = toTraverse.remove();
+			counter++;
 		}
+		System.out.println(counter);
 		while(currentState.getParentNode()!=null) {
-			result = currentState.getOperator() + result;
+			result = currentState.getOperator() + "," + result;
 			currentState = currentState.getParentNode();
 		}
+		System.out.println("a5erha");
 		return result;
 		
 	}
+	public static void main(String[]args) {
+		MissionImpossible m = new MissionImpossible();
+		String grid = m.genGrid();
+		String submarine = grid.split(";")[2];
+		String ethan = grid.split(";")[1];
+		String[] goal = {submarine.split(",")[0],submarine.split(",")[1],"0",grid.split(";")[5]};
+		String[] members = grid.split(";")[3].split(",");
+		int membersNum = members.length/2;
+		String[] state = {ethan.split(",")[0],ethan.split(",")[1],""+membersNum,grid.split(";")[5]};
+		SearchTreeNode init = new SearchTreeNode(state,null,null,0,0);
+		System.out.print(BFS(init,grid,goal));
+	}
+	
+	
 }
