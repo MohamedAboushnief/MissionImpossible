@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public abstract class SearchProblem {
 
-	public static String DFS(SearchTreeNode intialState, String grid, SearchTreeNode goalState) {
+	public static String DFS(SearchTreeNode intialState, String grid, String[] goalState) {
 		ArrayList<String[]> ancestors = new ArrayList<String[]>();
 		String output = "";
 		Stack<SearchTreeNode> searchTreeNodesStack = new Stack<SearchTreeNode>();
@@ -16,16 +17,28 @@ public abstract class SearchProblem {
 		while (true) {
 			ancestors.add(searchTreeNodesStack.peek().getState());
 			output += searchTreeNodesStack.peek().getOperator();
+			for(int i=0 ; i< searchTreeNodesStack.peek().getState().length; i++) {
+				System.out.println(searchTreeNodesStack.peek().getState()[i]);
+			}
 			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid);
 			for (int i = 0; i < x.size(); i++) {
 				searchTreeNodesStack.push(x.get(i));
 			}
 			for (int i = 0; i < searchTreeNodesStack.size(); i++) {
 				SearchTreeNode y = searchTreeNodesStack.peek();
-				if (ancestors.contains(y.getState())) {
+				boolean found = false;
+				for(int j = 0; j< ancestors.size(); j++) {
+					if(Arrays.equals(y.getState(), ancestors.get(j))) {
+						found = true;
+						break;
+					}
+				}
+				if (found) {
+					System.out.println("here");
 					searchTreeNodesStack.pop();
 				} else {
-					if (y.getState() == goalState.getState()) {
+					System.out.println("not here");
+					if (y.getState().equals(goalState)) {
 						output += y.getOperator();
 						return output;
 					} else {
@@ -36,9 +49,6 @@ public abstract class SearchProblem {
 		}
 	}
 
-
-public abstract class SearchProblem {
-	
 	public static String BFS(SearchTreeNode initialState, String grid,String[] goal) {
 		String result = "";
 		Queue<SearchTreeNode> toTraverse = new LinkedList<SearchTreeNode>();
@@ -86,7 +96,7 @@ public abstract class SearchProblem {
 		int membersNum = members.length/2;
 		String[] state = {ethan.split(",")[0],ethan.split(",")[1],""+membersNum,grid.split(";")[5]};
 		SearchTreeNode init = new SearchTreeNode(state,null,null,0,0);
-		System.out.print(BFS(init,grid,goal));
+		System.out.print(DFS(init,grid,goal));
 	}
 	
 	
