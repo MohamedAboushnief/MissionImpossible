@@ -75,8 +75,8 @@ public class MissionImpossible extends SearchProblem {
 		
 		boolean isTop = isTop(parentState[0]);
 		boolean isLeft = isLeft(parentState[1]);
-		boolean isDown = isDown(splittedGrid[0],parentState[0]);
-		boolean isRight = isRight(splittedGrid[0],parentState[1]);
+		boolean isDown = isDown(splittedGrid[0].split(",")[0],parentState[0]);
+		boolean isRight = isRight(splittedGrid[0].split(",")[1],parentState[1]);
 
 		int parentDepth = state.getDepth();
 		int costToRoot = state.getCostToRoot();
@@ -92,6 +92,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[1] = ethY  + "";
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
+			
 			SearchTreeNode up = new SearchTreeNode(newState,state,"Up",newDepth,costToRoot);
 			stateSpace.add(up);
 		}
@@ -142,7 +143,7 @@ public class MissionImpossible extends SearchProblem {
 		int posIMF = 0;
 		String posEthanAndIMF = parentState[0] + "," + parentState[1] ;
 		while(posIMF < gridArray.size()) {
-			if(gridArray.get(posIMF).equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) )) { // Creating carry state
+			if(gridArray.get(posIMF).equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ) && (Integer.parseInt(parentState[2]) > 0)) { // Creating carry state
 				int ethX = Integer.parseInt(parentState[0]);
 				int ethY = Integer.parseInt(parentState[1]);
 				String remainingIMF = parentState[2];
@@ -162,7 +163,7 @@ public class MissionImpossible extends SearchProblem {
 			posIMF++;
 		}
 		
-		if(gridArray.get(2).equals(posEthanAndIMF)) { // Creating drop state
+		if(gridArray.get(2).equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) > 0)) { // Creating drop state
 			int ethX = Integer.parseInt(parentState[0]);
 			int ethY = Integer.parseInt(parentState[1]);
 			String remainingIMF = parentState[2];
@@ -174,6 +175,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[2] = remainingIMF;
 			int newNoOfCarry = Integer.parseInt(noOfcarry) - 1;
 			newState[3] = newNoOfCarry + "";
+			
 			SearchTreeNode drop = new SearchTreeNode(newState,state,"Drop",newDepth,costToRoot);
 			stateSpace.add(drop);
 		}
@@ -184,14 +186,12 @@ public class MissionImpossible extends SearchProblem {
 	}
 	public static boolean isTop(String ethanPos) {
 		if(ethanPos.charAt(0) == '0') {
-			System.out.println(ethanPos.charAt(0) + "posssssss");
 			return true;
 		}
 		return false;
 	}
 	public static boolean isDown(String maxGrid, String ethanPos) {
 		if(ethanPos.charAt(0) == maxGrid.charAt(0)) {
-			System.out.println(ethanPos.charAt(0) + "posssssss");
 
 			return true;
 		}
@@ -199,15 +199,12 @@ public class MissionImpossible extends SearchProblem {
 	}
 	public static boolean isLeft(String ethanPos) {
 		if(ethanPos.charAt(0) == '0') {
-			System.out.println(ethanPos.charAt(0) + "posssssss");
-
 			return true;
 		}
 		return false;
 	}
 	public static boolean isRight(String maxGrid, String ethanPos) {
 		if(ethanPos.charAt(0) == maxGrid.charAt(0)) {
-			System.out.println(ethanPos.charAt(0) + "posssssss");
 
 			return true;
 		}
