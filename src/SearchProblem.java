@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Stack;
 
 public abstract class SearchProblem {
@@ -12,9 +13,9 @@ public abstract class SearchProblem {
 		searchTreeNodesStack.push(intialState);
 		while (true) {
 			output += searchTreeNodesStack.peek().getOperator();
-			SearchTreeNode[] x = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid);
-			for (int i = 0; i < x.length; i++) {
-				searchTreeNodesStack.push(x[i]);
+			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid);
+			for (int i = 0; i < x.size(); i++) {
+				searchTreeNodesStack.push(x.get(i));
 			}
 			for (int i = 0; i < searchTreeNodesStack.size(); i++) {
 				SearchTreeNode y = searchTreeNodesStack.peek();
