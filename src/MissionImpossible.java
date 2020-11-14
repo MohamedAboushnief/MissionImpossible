@@ -1,5 +1,4 @@
 import java.util.*;
-import SearchTreeNode; 
 import java.util.Arrays;
 import java.util.List;
 
@@ -105,7 +104,14 @@ public class MissionImpossible extends SearchProblem {
 		}
 		return false;
 	}
-	
+//	public static void solve(String strategy) {
+//		String grid = genGrid();
+//		String[] gridParsed = grid.split(";");
+//		String intialState = gridParsed[0] + gridParsed[1];
+//		if(strategy == "DFS") {
+//			SearchProblem.DFS(intialState, grid, goalState)
+//		}
+//	}
 	public static void main(String[]args) {
 		
 		String test = genGrid();
