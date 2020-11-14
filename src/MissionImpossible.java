@@ -63,7 +63,7 @@ public class MissionImpossible extends SearchProblem {
 		}
 		outputGrid += ";" + health;
 		
-		int truckCarry = (int) (Math.random() * (imfMembers + 1));
+		int truckCarry = (int) (Math.random() * (imfMembers )+1);
 		outputGrid += truckCarry;
 		return outputGrid;
 	}
@@ -71,12 +71,13 @@ public class MissionImpossible extends SearchProblem {
 	public static ArrayList<SearchTreeNode> stateTransition(SearchTreeNode state, String grid) {
 		ArrayList<SearchTreeNode> stateSpace = new ArrayList<SearchTreeNode>();
 		String[] splittedGrid = grid.split(";");
-		boolean isTop = isTop(splittedGrid[1]);
-		boolean isLeft = isLeft(splittedGrid[1]);
-		boolean isDown = isDown(splittedGrid[0],splittedGrid[1]);
-		boolean isRight = isRight(splittedGrid[0],splittedGrid[1]);
-
 		String[] parentState = state.getState();
+		
+		boolean isTop = isTop(parentState[0]);
+		boolean isLeft = isLeft(parentState[1]);
+		boolean isDown = isDown(splittedGrid[0],parentState[0]);
+		boolean isRight = isRight(splittedGrid[0],parentState[1]);
+
 		int parentDepth = state.getDepth();
 		int costToRoot = state.getCostToRoot();
 
@@ -137,11 +138,11 @@ public class MissionImpossible extends SearchProblem {
 			stateSpace.add(right);
 		}
 		
-		List<String> gridArray = Arrays.asList(grid.replace(";",",").split("(?<!\\G\\d+),"));
-		int posIMF = 3;
-		String posEthanAndIMF = "(" + parentState[0] + "," + parentState[1] + ")";
+		List<String> gridArray = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
+		int posIMF = 0;
+		String posEthanAndIMF = parentState[0] + "," + parentState[1] ;
 		while(posIMF < gridArray.size()) {
-			if(gridArray.get(posIMF).equals(posEthanAndIMF)) { // Creating carry state
+			if(gridArray.get(posIMF).equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) )) { // Creating carry state
 				int ethX = Integer.parseInt(parentState[0]);
 				int ethY = Integer.parseInt(parentState[1]);
 				String remainingIMF = parentState[2];
@@ -183,24 +184,31 @@ public class MissionImpossible extends SearchProblem {
 	}
 	public static boolean isTop(String ethanPos) {
 		if(ethanPos.charAt(0) == '0') {
+			System.out.println(ethanPos.charAt(0) + "posssssss");
 			return true;
 		}
 		return false;
 	}
 	public static boolean isDown(String maxGrid, String ethanPos) {
 		if(ethanPos.charAt(0) == maxGrid.charAt(0)) {
+			System.out.println(ethanPos.charAt(0) + "posssssss");
+
 			return true;
 		}
 		return false;
 	}
 	public static boolean isLeft(String ethanPos) {
-		if(ethanPos.charAt(2) == '0') {
+		if(ethanPos.charAt(0) == '0') {
+			System.out.println(ethanPos.charAt(0) + "posssssss");
+
 			return true;
 		}
 		return false;
 	}
 	public static boolean isRight(String maxGrid, String ethanPos) {
-		if(ethanPos.charAt(2) == maxGrid.charAt(0)) {
+		if(ethanPos.charAt(0) == maxGrid.charAt(0)) {
+			System.out.println(ethanPos.charAt(0) + "posssssss");
+
 			return true;
 		}
 		return false;
