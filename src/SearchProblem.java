@@ -16,10 +16,11 @@ public abstract class SearchProblem {
 		searchTreeNodesStack.push(intialState);
 		while (true) {
 			ancestors.add(searchTreeNodesStack.peek().getState());
-			output += searchTreeNodesStack.peek().getOperator();
-			for(int i=0 ; i< searchTreeNodesStack.peek().getState().length; i++) {
-				System.out.println(searchTreeNodesStack.peek().getState()[i]);
-			}
+//			output += searchTreeNodesStack.peek().getOperator();
+			System.out.println(output);
+//			for(int i=0 ; i< searchTreeNodesStack.peek().getState().length; i++) {
+//				System.out.println(searchTreeNodesStack.peek().getState()[i]);
+//			}
 			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid);
 			for (int i = 0; i < x.size(); i++) {
 				searchTreeNodesStack.push(x.get(i));
@@ -29,6 +30,11 @@ public abstract class SearchProblem {
 				boolean found = false;
 				for(int j = 0; j< ancestors.size(); j++) {
 					if(Arrays.equals(y.getState(), ancestors.get(j))) {
+//						for(int cc=0 ; cc< searchTreeNodesStack.peek().getState().length; cc++) {
+//							System.out.println(y.getState()[i]);
+//							System.out.println(ancestors.get(j)[i]);
+//							
+//						}
 						found = true;
 						break;
 					}
