@@ -158,6 +158,7 @@ public class MissionImpossible extends SearchProblem {
 			stateSpace.add(right);
 		}
 
+
 		List<String> gridArray = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
 		int posIMF = 0;
 		String posEthanAndIMF = parentState[0] + "," + parentState[1];
