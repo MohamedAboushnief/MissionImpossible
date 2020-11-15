@@ -165,11 +165,11 @@ public class MissionImpossible extends SearchProblem {
 			System.out.println((gridArray.get(posIMF).equals(posEthanAndIMF)
 					&& (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]))
 					&& (Integer.parseInt(parentState[2]) > 0) && !pickedIMF.contains(gridArray.get(posIMF))));
-			System.out.println("nafs el pos"+(gridArray.get(posIMF).equals(posEthanAndIMF)));
-			System.out.println("a2al mn el carry" + (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5])));
-			System.out.println("3addad el IMF akbar mn zero" + (Integer.parseInt(parentState[2]) > 0));
-			System.out.println("ma3adaash 3l IMF" + pickedIMF.contains(gridArray.get(posIMF)));
-			System.out.println("el picked members locations");
+			System.out.println("nafs el pos : "+(gridArray.get(posIMF).equals(posEthanAndIMF)));
+			System.out.println("a2al mn el carry : " + (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5])));
+			System.out.println("3addad el IMF akbar mn zero : " + (Integer.parseInt(parentState[2]) > 0));
+			System.out.println("ma3adaash 3l IMF : " + pickedIMF.contains(gridArray.get(posIMF)));
+			System.out.println("el picked members locations : ");
 			for(int i =0;i<pickedIMF.size();i++) {
 				System.out.println(pickedIMF.get(i));
 			}
