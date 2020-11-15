@@ -3,10 +3,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MissionImpossible extends SearchProblem {
-	static List<String> pickedIMF = new ArrayList<String>();
+	static List<String> pickedIMF ;
 
 	public MissionImpossible() {
-		
+		pickedIMF = new ArrayList<String>(); 
 	}
 
 	public static String genGrid() {
