@@ -16,6 +16,7 @@ public abstract class SearchProblem {
 		}
 		searchTreeNodesStack.push(intialState);
 		while (true) {
+			System.out.println(searchTreeNodesStack.peek().getDepth() + " Depth");
 			if (threshold <= searchTreeNodesStack.peek().getDepth() && searchTreeNodesStack.peek().getDepth() != 0) {
 				return "No solution";
 			}
@@ -212,7 +213,7 @@ public abstract class SearchProblem {
 	public static void main(String[] args) {
 		MissionImpossible m = new MissionImpossible();
 //		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-		String grid = "5,5;1,2;2,4;1,3;20;3";
+		String grid = "5,5;2,1;1,0;1,3,4,2,4,1,3,1;54,31,39,98;2";
 		String totalHealth = grid.split(";")[4];
 		String submarine = grid.split(";")[2];
 		String ethan = grid.split(";")[1];
@@ -224,7 +225,7 @@ public abstract class SearchProblem {
 		int membersNum = members.length / 2;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth };
 		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0);
-		System.out.print(ID(init, grid, goal, 5));
+		System.out.print(DFS(init, grid, goal, 1000, m));
 	}
 
 }

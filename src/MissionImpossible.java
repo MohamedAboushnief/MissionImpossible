@@ -250,11 +250,39 @@ public class MissionImpossible extends SearchProblem {
 		}
 		return false;
 	}
+	public static String solve(String grid, String strategy, MissionImpossible m) {
+		String totalHealth = grid.split(";")[4];
+		String submarine = grid.split(";")[2];
+		String ethan = grid.split(";")[1];
+		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0", "0,0" };
+		String[] members = grid.split(";")[3].split(",");
+		int membersNum = members.length / 2;
+		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth };
+		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0);
+		if(strategy == "DFS") {
+			return DFS(init, grid, goal, 100000, m);
+		}
+		if(strategy == "BFS") {
+			return BFS(init, grid, goal);
+		}
+		if(strategy == "ID") {
+			return ID(init, grid, goal, 1000);
+		}
+		if(strategy == "UCS") {
+			// Call UCS
+		}
+		if(strategy == "A*") {
+			// Call A*
+		}
+		if(strategy == "greedy") {
+			// Call greedy
+		}
+		return "Please enter a correct strategy";
+	}
 
 	public static void main(String[] args) {
-
-		String test = genGrid();
-		System.out.println(test);
-
+		MissionImpossible m = new MissionImpossible();
+		String solved = m.solve(m.genGrid(), "ID", m);
+		System.out.println(solved);
 	}
 }
