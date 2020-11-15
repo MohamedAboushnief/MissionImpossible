@@ -157,14 +157,7 @@ public class MissionImpossible extends SearchProblem {
 			SearchTreeNode right = new SearchTreeNode(newState, state, "Right", newDepth, costToRoot);
 			stateSpace.add(right);
 		}
-<<<<<<< HEAD
-		
-		List<String> gridArray = Arrays.asList(grid.replace(";",",").split("(?<!\\G\\d+),"));
-		int posIMF = 3;
-		String posEthanAndIMF =  parentState[0] + "," + parentState[1];
-		while(posIMF < gridArray.size()) {
-			if(gridArray.get(posIMF).equals(posEthanAndIMF)) { // Creating carry state
-=======
+
 
 		List<String> gridArray = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
 		int posIMF = 0;
@@ -190,7 +183,6 @@ public class MissionImpossible extends SearchProblem {
 																												// state
 				System.out.println("da5al ahhh");
 				pickedIMF.add(gridArray.get(posIMF));
->>>>>>> f67baaa97219e809edc0e5926f3fc1dae8b7b522
 				int ethX = Integer.parseInt(parentState[0]);
 				int ethY = Integer.parseInt(parentState[1]);
 				String remainingIMF = parentState[2];
