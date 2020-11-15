@@ -139,7 +139,7 @@ public class MissionImpossible extends SearchProblem {
 		
 		List<String> gridArray = Arrays.asList(grid.replace(";",",").split("(?<!\\G\\d+),"));
 		int posIMF = 3;
-		String posEthanAndIMF = "(" + parentState[0] + "," + parentState[1] + ")";
+		String posEthanAndIMF =  parentState[0] + "," + parentState[1];
 		while(posIMF < gridArray.size()) {
 			if(gridArray.get(posIMF).equals(posEthanAndIMF)) { // Creating carry state
 				int ethX = Integer.parseInt(parentState[0]);
