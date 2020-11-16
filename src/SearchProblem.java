@@ -96,6 +96,7 @@ public abstract class SearchProblem {
 				}
 				if (found) {
 					System.out.println("here");
+					break;
 				} else {
 					toTraverse.add(stateSpace.get(i));
 				}

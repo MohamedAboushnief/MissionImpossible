@@ -96,7 +96,7 @@ public class MissionImpossible extends SearchProblem {
 				}
 			}
 		}
-		String imfMembersLocations = grid.split(";")[3];
+		String imfMembersLocations = state.getState()[5];
 		
 		if (!isTop) { // Creating up state
 			int ethX = Integer.parseInt(parentState[0]);
@@ -177,7 +177,6 @@ public class MissionImpossible extends SearchProblem {
 				System.out.println(posEthanAndIMF);
 				if((prevMembersLocations[j]).equals(posEthanAndIMF)) {
 					memberExist = true;
-					break;
 				}
 				else {
 					if(j==0) {
@@ -196,9 +195,6 @@ public class MissionImpossible extends SearchProblem {
 			if(memberExist && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ) && (Integer.parseInt(parentState[2]) > 0)) { // Creating carry state
 				int ethX = Integer.parseInt(parentState[0]);
 				int ethY = Integer.parseInt(parentState[1]);
-				String stringGridArray = "";
-				for(int i = 0;i<gridArray.size();i++){
-				System.out.println(grid);
 				String remainingIMF = parentState[2];
 				String noOfcarry = parentState[3];
 				int newDepth = parentDepth + 1;
@@ -213,7 +209,6 @@ public class MissionImpossible extends SearchProblem {
 				newState[5] = outputMembers;
 				SearchTreeNode carry = new SearchTreeNode(newState,state,"Carry",newDepth,costToRoot);
 				stateSpace.add(carry);
-			}
 			}
 
 		if (splittedGrid[2].equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) > 0)) { // Creating drop state
