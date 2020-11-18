@@ -6,7 +6,7 @@ public class MissionImpossible extends SearchProblem {
 	static List<String> pickedIMF = new ArrayList<String>();
 
 	public MissionImpossible() {
-		
+
 	}
 
 	public static String genGrid() {
@@ -67,40 +67,38 @@ public class MissionImpossible extends SearchProblem {
 		outputGrid += truckCarry;
 		return outputGrid;
 	}
-	
-	
-	//calculates cost 
+
+	// calculates cost
 	public static int GetCost(String newHealth, String oldHealth) {
-		
-		//calculate sum of old health
+
+		// calculate sum of old health
 		int healthSumOld = 0;
-		int deathNew=0;
+		int deathNew = 0;
 		String[] healthOfMembersOld = oldHealth.split(",");
 		for (String memberHealth : healthOfMembersOld) {
 			int s = Integer.parseInt(memberHealth);
 			healthSumOld += s;
-			if(s==0) {
+			if (s == 0) {
 				deathNew++;
 			}
 		}
-		
-		
-		//calculate sum of new health
+
+		// calculate sum of new health
 		int healthSumNew = 0;
-		int deathOld=0;
+		int deathOld = 0;
 		String[] healthOfMembersNew = newHealth.split(",");
 		for (String memberHealth : healthOfMembersNew) {
 			int s = Integer.parseInt(memberHealth);
 			healthSumNew += s;
-			if(s==0) {
+			if (s == 0) {
 				deathOld++;
 			}
-		}		
-		
+		}
+
 //		System.out.println("old death numbers: "+ deathOld);
 //		System.out.println("new death numbers: "+ deathNew);
 
-		int cost = ((healthSumOld - healthSumNew)/2)+((deathOld-deathNew)*5);
+		int cost = ((healthSumOld - healthSumNew) / 2) + ((deathOld - deathNew) * 5);
 		return cost;
 	}
 
@@ -108,7 +106,6 @@ public class MissionImpossible extends SearchProblem {
 		ArrayList<SearchTreeNode> stateSpace = new ArrayList<SearchTreeNode>();
 		String[] splittedGrid = grid.split(";");
 		String[] parentState = state.getState();
-		
 
 		boolean isTop = isTop(parentState[0]);
 		boolean isLeft = isLeft(parentState[1]);
@@ -117,7 +114,7 @@ public class MissionImpossible extends SearchProblem {
 
 		int parentDepth = state.getDepth();
 		int costToRoot = state.getCostToRoot();
-		String OldHealth= state.getState()[4];
+		String OldHealth = state.getState()[4];
 		String newHealth = "";
 		for (int i = 0; i < state.getState()[4].split(",").length; i++) {
 			if (i == state.getState()[4].split(",").length - 1) {
@@ -134,21 +131,35 @@ public class MissionImpossible extends SearchProblem {
 				}
 			}
 		}
-		
+
+		String imfMembersLocations = state.getState()[5];
+//		List<String> imfMembers  = Arrays.asList(imfMembersLocations.split("(?<!\\G\\d+),"));
+//		List<String> imfMembers  = Arrays.asList("");
+		List<String> imfMembers = new ArrayList<String>();
+
+		if (imfMembersLocations.length() > 0) {
+			imfMembers = Arrays.asList(imfMembersLocations.split("(?<!\\G\\d+),"));
+		} else {
+			imfMembers = Arrays.asList("");
+
+		}
+
 		if (!isTop) { // Creating up state
 			int ethX = Integer.parseInt(parentState[0]);
 			int ethY = Integer.parseInt(parentState[1]);
 			String remainingIMF = parentState[2];
 			String noOfcarry = parentState[3];
 			int newDepth = parentDepth + 1;
-			String[] newState = new String[5];
+			String[] newState = new String[6];
 			newState[0] = (ethX - 1) + "";
 			newState[1] = ethY + "";
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
-			newState[4] = newHealth;	
-			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
-			SearchTreeNode up = new SearchTreeNode(newState, state, "Up", newDepth, newCostToRoot);
+			newState[4] = newHealth;
+			newState[5] = imfMembersLocations;
+
+			int newCostToRoot = GetCost(newHealth, OldHealth) + costToRoot;
+			SearchTreeNode up = new SearchTreeNode(newState, state, "Up", newDepth, newCostToRoot, 0);
 			stateSpace.add(up);
 		}
 		if (!isLeft) { // Creating left state
@@ -157,14 +168,16 @@ public class MissionImpossible extends SearchProblem {
 			String remainingIMF = parentState[2];
 			String noOfcarry = parentState[3];
 			int newDepth = parentDepth + 1;
-			String[] newState = new String[5];
+			String[] newState = new String[6];
 			newState[0] = ethX + "";
 			newState[1] = (ethY - 1) + "";
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
 			newState[4] = newHealth;
-			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
-			SearchTreeNode left = new SearchTreeNode(newState, state, "Left", newDepth, newCostToRoot);
+			newState[5] = imfMembersLocations;
+
+			int newCostToRoot = GetCost(newHealth, OldHealth) + costToRoot;
+			SearchTreeNode left = new SearchTreeNode(newState, state, "Left", newDepth, newCostToRoot, 0);
 			stateSpace.add(left);
 		}
 		if (!isDown) { // Creating down state
@@ -173,14 +186,16 @@ public class MissionImpossible extends SearchProblem {
 			String remainingIMF = parentState[2];
 			String noOfcarry = parentState[3];
 			int newDepth = parentDepth + 1;
-			String[] newState = new String[5];
+			String[] newState = new String[6];
 			newState[0] = (ethX + 1) + "";
 			newState[1] = ethY + "";
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
 			newState[4] = newHealth;
-			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
-			SearchTreeNode down = new SearchTreeNode(newState, state, "Down", newDepth, newCostToRoot);
+			newState[5] = imfMembersLocations;
+
+			int newCostToRoot = GetCost(newHealth, OldHealth) + costToRoot;
+			SearchTreeNode down = new SearchTreeNode(newState, state, "Down", newDepth, newCostToRoot, 0);
 			stateSpace.add(down);
 		}
 		if (!isRight) { // Creating right state
@@ -189,83 +204,143 @@ public class MissionImpossible extends SearchProblem {
 			String remainingIMF = parentState[2];
 			String noOfcarry = parentState[3];
 			int newDepth = parentDepth + 1;
-			String[] newState = new String[5];
+			String[] newState = new String[6];
 			newState[0] = ethX + "";
 			newState[1] = (ethY + 1) + "";
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
 			newState[4] = newHealth;
-			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
-			SearchTreeNode right = new SearchTreeNode(newState, state, "Right", newDepth, newCostToRoot);
+			newState[5] = imfMembersLocations;
+
+			int newCostToRoot = GetCost(newHealth, OldHealth) + costToRoot;
+			SearchTreeNode right = new SearchTreeNode(newState, state, "Right", newDepth, newCostToRoot, 0);
 			stateSpace.add(right);
 		}
 
+//		//carry 
+//		List<String> gridArray = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
+//		int posIMF = 0;
+//		String posEthanAndIMF = parentState[0] + "," + parentState[1];
+//		while (posIMF < gridArray.size()) {
+//			System.out.println((gridArray.get(posIMF).equals(posEthanAndIMF)
+//					&& (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]))
+//					&& (Integer.parseInt(parentState[2]) > 0) && !pickedIMF.contains(gridArray.get(posIMF))));
+//			System.out.println("nafs el pos : "+(gridArray.get(posIMF).equals(posEthanAndIMF)));
+//			System.out.println("a2al mn el carry : " + (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5])));
+//			System.out.println("3addad el IMF akbar mn zero : " + (Integer.parseInt(parentState[2]) > 0));
+//			System.out.println("ma3adaash 3l IMF : " + pickedIMF.contains(gridArray.get(posIMF)));
+//			System.out.println("el picked members locations : ");
+//			for(int i =0;i<pickedIMF.size();i++) {
+//				System.out.println(pickedIMF.get(i));
+//			}
+//
+//			System.out.println();
+//			if (gridArray.get(posIMF).equals(posEthanAndIMF)
+//					&& (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]))
+//					&& (Integer.parseInt(parentState[2]) > 0) && !pickedIMF.contains(gridArray.get(posIMF))) { // Creating
+//																												// carry
+//																												// state
+//				System.out.println("da5al ahhh");
+//				pickedIMF.add(gridArray.get(posIMF));
+//				int ethX = Integer.parseInt(parentState[0]);
+//				int ethY = Integer.parseInt(parentState[1]);
+//				String remainingIMF = parentState[2];
+//				String noOfcarry = parentState[3];
+//				int newDepth = parentDepth + 1;
+//				String[] newState = new String[5];
+//				newState[0] = ethX + "";
+//				newState[1] = ethY + "";
+//				int newRemainingIMF = Integer.parseInt(remainingIMF) - 1;
+//				newState[2] = newRemainingIMF + "";
+//				int newNoOfCarry = Integer.parseInt(noOfcarry) + 1;
+//				newState[3] = newNoOfCarry + "";
+//				newState[4] = newHealth;
+//				int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
+//				SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, newCostToRoot);
+//				stateSpace.add(carry);
+//			}
+//
+//			posIMF++;
+//		}
 
-		
-		//carry 
-		List<String> gridArray = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
-		int posIMF = 0;
+		String[] prevMembersLocations = state.getState()[5].split("(?<!\\G\\d+),");
 		String posEthanAndIMF = parentState[0] + "," + parentState[1];
-		while (posIMF < gridArray.size()) {
-			System.out.println((gridArray.get(posIMF).equals(posEthanAndIMF)
-					&& (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]))
-					&& (Integer.parseInt(parentState[2]) > 0) && !pickedIMF.contains(gridArray.get(posIMF))));
-			System.out.println("nafs el pos : "+(gridArray.get(posIMF).equals(posEthanAndIMF)));
-			System.out.println("a2al mn el carry : " + (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5])));
-			System.out.println("3addad el IMF akbar mn zero : " + (Integer.parseInt(parentState[2]) > 0));
-			System.out.println("ma3adaash 3l IMF : " + pickedIMF.contains(gridArray.get(posIMF)));
-			System.out.println("el picked members locations : ");
-			for(int i =0;i<pickedIMF.size();i++) {
-				System.out.println(pickedIMF.get(i));
-			}
 
-			System.out.println();
-			if (gridArray.get(posIMF).equals(posEthanAndIMF)
-					&& (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]))
-					&& (Integer.parseInt(parentState[2]) > 0) && !pickedIMF.contains(gridArray.get(posIMF))) { // Creating
-																												// carry
-																												// state
-				System.out.println("da5al ahhh");
-				pickedIMF.add(gridArray.get(posIMF));
-				int ethX = Integer.parseInt(parentState[0]);
-				int ethY = Integer.parseInt(parentState[1]);
-				String remainingIMF = parentState[2];
-				String noOfcarry = parentState[3];
-				int newDepth = parentDepth + 1;
-				String[] newState = new String[5];
-				newState[0] = ethX + "";
-				newState[1] = ethY + "";
-				int newRemainingIMF = Integer.parseInt(remainingIMF) - 1;
-				newState[2] = newRemainingIMF + "";
-				int newNoOfCarry = Integer.parseInt(noOfcarry) + 1;
-				newState[3] = newNoOfCarry + "";
-				newState[4] = newHealth;
-				int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
-				SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, newCostToRoot);
-				stateSpace.add(carry);
-			}
+		String outputMembers = "";
+		boolean memberExist = false;
+		for (int j = 0; j < prevMembersLocations.length; j++) {
+			if ((prevMembersLocations[j]).equals(posEthanAndIMF)) {
+				memberExist = true;
+			} else {
+				if (j == 0) {
+					outputMembers = prevMembersLocations[j];
+				} else {
+					outputMembers = outputMembers + "," + prevMembersLocations[j];
+				}
 
-			posIMF++;
+			}
 		}
-		
-		//drop
+
+		if (memberExist && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]))
+				&& (Integer.parseInt(parentState[2]) > 0)) { // Creating carry state
+			int ethX = Integer.parseInt(parentState[0]);
+			int ethY = Integer.parseInt(parentState[1]);
+			String remainingIMF = parentState[2];
+			String noOfcarry = parentState[3];
+			int newDepth = parentDepth + 1;
+			String[] newState = new String[6];
+			newState[0] = ethX + "";
+			newState[1] = ethY + "";
+			int newRemainingIMF = Integer.parseInt(remainingIMF) - 1;
+			newState[2] = newRemainingIMF + "";
+			int newNoOfCarry = Integer.parseInt(noOfcarry) + 1;
+			newState[3] = newNoOfCarry + "";
+			newState[4] = newHealth;
+			newState[5] = outputMembers;
+			List<String> carryIMFMembers = Arrays.asList(outputMembers.split("(?<!\\G\\d+),"));
+			int newCostToRoot = GetCost(newHealth, OldHealth) + costToRoot;
+			SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, newCostToRoot, 0);
+			stateSpace.add(carry);
+		}
+
+//		//drop
+//		if (splittedGrid[2].equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) > 0)) { // Creating drop state
+//			int ethX = Integer.parseInt(parentState[0]);
+//			int ethY = Integer.parseInt(parentState[1]);
+//			String remainingIMF = parentState[2];
+//			String noOfcarry = parentState[3];
+//			int newDepth = parentDepth + 1;
+//			String[] newState = new String[5];
+//			newState[0] = ethX + "";
+//			newState[1] = ethY + "";
+//			newState[2] = remainingIMF;
+//			int newNoOfCarry = Integer.parseInt(noOfcarry) - 1;
+//			newState[3] = newNoOfCarry + "";
+//			newState[4] = newHealth;
+//			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
+//			SearchTreeNode drop = new SearchTreeNode(newState, state, "Drop", newDepth, newCostToRoot,0);
+//			stateSpace.add(drop);
+//		}
+
 		if (splittedGrid[2].equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) > 0)) { // Creating drop state
 			int ethX = Integer.parseInt(parentState[0]);
 			int ethY = Integer.parseInt(parentState[1]);
 			String remainingIMF = parentState[2];
 			String noOfcarry = parentState[3];
 			int newDepth = parentDepth + 1;
-			String[] newState = new String[5];
+			String[] newState = new String[6];
 			newState[0] = ethX + "";
 			newState[1] = ethY + "";
 			newState[2] = remainingIMF;
 			int newNoOfCarry = Integer.parseInt(noOfcarry) - 1;
 			newState[3] = newNoOfCarry + "";
 			newState[4] = newHealth;
-			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
-			SearchTreeNode drop = new SearchTreeNode(newState, state, "Drop", newDepth, newCostToRoot);
+			newState[5] = imfMembersLocations;
+			int newCostToRoot = GetCost(newHealth, OldHealth) + costToRoot;
+			SearchTreeNode drop = new SearchTreeNode(newState, state, "Drop", newDepth, newCostToRoot, 0);
 			stateSpace.add(drop);
 		}
+
 		return stateSpace;
 
 	}

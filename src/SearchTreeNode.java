@@ -1,17 +1,22 @@
+import java.util.Comparator;
 
-public class SearchTreeNode implements Comparable {
+public class SearchTreeNode implements Comparable, Comparator<SearchTreeNode> {
 	private String[] state;
 	private SearchTreeNode parentNode;
 	private String operator;
 	private int depth;
 	private int costToRoot;
+	private int heuristicValue;
 
-	public SearchTreeNode(String[] state, SearchTreeNode parentNode, String operator, int depth, int costToRoot) {
+	public SearchTreeNode(String[] state, SearchTreeNode parentNode, String operator, int depth, int costToRoot,
+			int heuristicValue) {
 		this.state = state;
 		this.parentNode = parentNode;
 		this.operator = operator;
 		this.depth = depth;
 		this.costToRoot = costToRoot;
+		this.heuristicValue = heuristicValue;
+
 	}
 
 	public String[] getState() {
@@ -54,8 +59,26 @@ public class SearchTreeNode implements Comparable {
 		this.costToRoot = costToRoot;
 	}
 
+	public int getHeuristicValue() {
+		return heuristicValue;
+	}
+
+	public void setHeuristicValue(int heuristicValue) {
+		this.heuristicValue = heuristicValue;
+	}
+
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub
 		return ((Integer) this.getCostToRoot()).compareTo(((SearchTreeNode) o).getCostToRoot());
+	}
+
+	public int compare(SearchTreeNode o1, SearchTreeNode o2) {
+		if (o1.getCostToRoot() > o2.getCostToRoot())
+			return 1;
+		else if (o1.getCostToRoot() < o2.getCostToRoot())
+			return -1;
+		else
+			return 0;
+
 	}
 }
