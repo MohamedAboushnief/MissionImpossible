@@ -1,6 +1,5 @@
 
-
-public class SearchTreeNode {
+public class SearchTreeNode implements Comparable {
 	private String[] state;
 	private SearchTreeNode parentNode;
 	private String operator;
@@ -53,5 +52,10 @@ public class SearchTreeNode {
 
 	public void setCostToRoot(int costToRoot) {
 		this.costToRoot = costToRoot;
+	}
+
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+		return ((Integer) this.getCostToRoot()).compareTo(((SearchTreeNode) o).getCostToRoot());
 	}
 }

@@ -67,11 +67,48 @@ public class MissionImpossible extends SearchProblem {
 		outputGrid += truckCarry;
 		return outputGrid;
 	}
+	
+	
+	//calculates cost 
+	public static int GetCost(String newHealth, String oldHealth) {
+		
+		//calculate sum of old health
+		int healthSumOld = 0;
+		int deathNew=0;
+		String[] healthOfMembersOld = oldHealth.split(",");
+		for (String memberHealth : healthOfMembersOld) {
+			int s = Integer.parseInt(memberHealth);
+			healthSumOld += s;
+			if(s==0) {
+				deathNew++;
+			}
+		}
+		
+		
+		//calculate sum of new health
+		int healthSumNew = 0;
+		int deathOld=0;
+		String[] healthOfMembersNew = newHealth.split(",");
+		for (String memberHealth : healthOfMembersNew) {
+			int s = Integer.parseInt(memberHealth);
+			healthSumNew += s;
+			if(s==0) {
+				deathOld++;
+			}
+		}		
+		
+//		System.out.println("old death numbers: "+ deathOld);
+//		System.out.println("new death numbers: "+ deathNew);
+
+		int cost = ((healthSumOld - healthSumNew)/2)+((deathOld-deathNew)*5);
+		return cost;
+	}
 
 	public static ArrayList<SearchTreeNode> stateTransition(SearchTreeNode state, String grid) {
 		ArrayList<SearchTreeNode> stateSpace = new ArrayList<SearchTreeNode>();
 		String[] splittedGrid = grid.split(";");
 		String[] parentState = state.getState();
+		
 
 		boolean isTop = isTop(parentState[0]);
 		boolean isLeft = isLeft(parentState[1]);
@@ -80,6 +117,7 @@ public class MissionImpossible extends SearchProblem {
 
 		int parentDepth = state.getDepth();
 		int costToRoot = state.getCostToRoot();
+		String OldHealth= state.getState()[4];
 		String newHealth = "";
 		for (int i = 0; i < state.getState()[4].split(",").length; i++) {
 			if (i == state.getState()[4].split(",").length - 1) {
@@ -96,6 +134,7 @@ public class MissionImpossible extends SearchProblem {
 				}
 			}
 		}
+		
 		if (!isTop) { // Creating up state
 			int ethX = Integer.parseInt(parentState[0]);
 			int ethY = Integer.parseInt(parentState[1]);
@@ -107,9 +146,9 @@ public class MissionImpossible extends SearchProblem {
 			newState[1] = ethY + "";
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
-			newState[4] = newHealth;
-
-			SearchTreeNode up = new SearchTreeNode(newState, state, "Up", newDepth, costToRoot);
+			newState[4] = newHealth;	
+			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
+			SearchTreeNode up = new SearchTreeNode(newState, state, "Up", newDepth, newCostToRoot);
 			stateSpace.add(up);
 		}
 		if (!isLeft) { // Creating left state
@@ -124,7 +163,8 @@ public class MissionImpossible extends SearchProblem {
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
 			newState[4] = newHealth;
-			SearchTreeNode left = new SearchTreeNode(newState, state, "Left", newDepth, costToRoot);
+			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
+			SearchTreeNode left = new SearchTreeNode(newState, state, "Left", newDepth, newCostToRoot);
 			stateSpace.add(left);
 		}
 		if (!isDown) { // Creating down state
@@ -139,7 +179,8 @@ public class MissionImpossible extends SearchProblem {
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
 			newState[4] = newHealth;
-			SearchTreeNode down = new SearchTreeNode(newState, state, "Down", newDepth, costToRoot);
+			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
+			SearchTreeNode down = new SearchTreeNode(newState, state, "Down", newDepth, newCostToRoot);
 			stateSpace.add(down);
 		}
 		if (!isRight) { // Creating right state
@@ -154,11 +195,14 @@ public class MissionImpossible extends SearchProblem {
 			newState[2] = remainingIMF;
 			newState[3] = noOfcarry;
 			newState[4] = newHealth;
-			SearchTreeNode right = new SearchTreeNode(newState, state, "Right", newDepth, costToRoot);
+			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
+			SearchTreeNode right = new SearchTreeNode(newState, state, "Right", newDepth, newCostToRoot);
 			stateSpace.add(right);
 		}
 
 
+		
+		//carry 
 		List<String> gridArray = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
 		int posIMF = 0;
 		String posEthanAndIMF = parentState[0] + "," + parentState[1];
@@ -196,12 +240,15 @@ public class MissionImpossible extends SearchProblem {
 				int newNoOfCarry = Integer.parseInt(noOfcarry) + 1;
 				newState[3] = newNoOfCarry + "";
 				newState[4] = newHealth;
-				SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, costToRoot);
+				int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
+				SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, newCostToRoot);
 				stateSpace.add(carry);
 			}
 
 			posIMF++;
 		}
+		
+		//drop
 		if (splittedGrid[2].equals(posEthanAndIMF) && (Integer.parseInt(parentState[3]) > 0)) { // Creating drop state
 			int ethX = Integer.parseInt(parentState[0]);
 			int ethY = Integer.parseInt(parentState[1]);
@@ -215,8 +262,8 @@ public class MissionImpossible extends SearchProblem {
 			int newNoOfCarry = Integer.parseInt(noOfcarry) - 1;
 			newState[3] = newNoOfCarry + "";
 			newState[4] = newHealth;
-
-			SearchTreeNode drop = new SearchTreeNode(newState, state, "Drop", newDepth, costToRoot);
+			int newCostToRoot=GetCost(newHealth,OldHealth) + costToRoot;
+			SearchTreeNode drop = new SearchTreeNode(newState, state, "Drop", newDepth, newCostToRoot);
 			stateSpace.add(drop);
 		}
 		return stateSpace;

@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.Stack;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Collections;
 
 public abstract class SearchProblem {
 
@@ -135,11 +136,11 @@ public abstract class SearchProblem {
 		return result;
 
 	}
-	
+
 	public static String BFS(SearchTreeNode intialState, String grid, String[] goalState) {
 		ArrayList<String> ancestors = new ArrayList<String>();
 		String output = "";
-		//Stack<SearchTreeNode> searchTreeNodesStack = new Stack<SearchTreeNode>();
+		// Stack<SearchTreeNode> searchTreeNodesStack = new Stack<SearchTreeNode>();
 		Queue<SearchTreeNode> searchTreeNodesStack = new LinkedList<SearchTreeNode>();
 		if (intialState == null) {
 			return output;
@@ -155,8 +156,10 @@ public abstract class SearchProblem {
 //			}
 			searchTreeNodesStack.peek().getState()[4] = "0,0";
 //			ancestors.add(searchTreeNodesStack.peek().getState());
-			ancestors.add(searchTreeNodesStack.peek().getState()[0]+","+searchTreeNodesStack.peek().getState()[1]+","+searchTreeNodesStack.peek().getState()[2]+","+searchTreeNodesStack.peek().getState()[3]);
-			
+			ancestors.add(searchTreeNodesStack.peek().getState()[0] + "," + searchTreeNodesStack.peek().getState()[1]
+					+ "," + searchTreeNodesStack.peek().getState()[2] + ","
+					+ searchTreeNodesStack.peek().getState()[3]);
+
 			if (searchTreeNodesStack.peek().getOperator() != null) {
 				output += searchTreeNodesStack.peek().getOperator();
 			}
@@ -176,8 +179,9 @@ public abstract class SearchProblem {
 				System.out.println();
 				boolean found = false;
 				for (int j = 0; j < ancestors.size(); j++) {
-					
-					if ((y.getState()[0]+","+y.getState()[1]+","+y.getState()[2]+","+y.getState()[3]).equals(ancestors.get(j))) {
+
+					if ((y.getState()[0] + "," + y.getState()[1] + "," + y.getState()[2] + "," + y.getState()[3])
+							.equals(ancestors.get(j))) {
 //						for(int cc=0 ; cc< searchTreeNodesStack.peek().getState().length; cc++) {
 //							System.out.println(y.getState()[i]);
 //							System.out.println(ancestors.get(j)[i]);
@@ -203,24 +207,127 @@ public abstract class SearchProblem {
 		}
 	}
 
+	public static String UCS(SearchTreeNode intialState, String grid, String[] goalState) {
+
+		ArrayList<String[]> ancestors = new ArrayList<String[]>();
+		String output = "";
+		Stack<SearchTreeNode> searchTreeNodesStack = new Stack<SearchTreeNode>();
+		if (intialState == null) {
+			return output;
+
+		}
+
+		searchTreeNodesStack.push(intialState);
+		int counter = 0;
+		while (true) {
+
+			SearchTreeNode currentNode = searchTreeNodesStack.peek();
+			ancestors.add(currentNode.getState());
+
+			if (currentNode.getOperator() != null) {
+				output += currentNode.getOperator();
+			}
+
+			if (Arrays.equals(currentNode.getState(), goalState)) {
+//				output += currentNode.getOperator();
+				return output;
+			}
+
+			// pop from stack and pass to transition function
+			ArrayList<SearchTreeNode> stateSpaces = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid);
+
+
+//			Collections.sort(stateSpaces);
+			System.out.println("###### size of state space : " + stateSpaces.size());
+
+
+			
+//			System.out.println(output);
+			
+//			if (counter == 52) {
+//				break;
+//			}
+
+//			newState[0] = ethX 
+//			newState[1] = ethY
+//			newState[2] = remainingIMF
+//			newState[3] = noOfcarry
+//			newState[4] = newHealth
+
+			// push in stack all the new sorted states if not a repeated state
+			for (int i = stateSpaces.size() - 1; i >= 0; i--) {
+				boolean found = false;
+				for (int j = 0; j < ancestors.size(); j++) {
+
+					if (ancestors.get(j)[0].equals(stateSpaces.get(i).getState()[0])
+							&& ancestors.get(j)[1].equals(stateSpaces.get(i).getState()[1])
+							&& ancestors.get(j)[2].equals(stateSpaces.get(i).getState()[2])
+							&& ancestors.get(j)[3].equals(stateSpaces.get(i).getState()[3])) {
+
+						System.out.println("--------------------------------------");
+						System.out.printf("ethan : %s,%s  \n", stateSpaces.get(i).getState()[0],
+								stateSpaces.get(i).getState()[1]);
+						System.out.printf("remaining imf : %s  \n", stateSpaces.get(i).getState()[2]);
+						System.out.printf("no of carry : %s  \n", stateSpaces.get(i).getState()[3]);
+						System.out.printf("operator : %s  \n", stateSpaces.get(i).getOperator());
+						System.out.println("*************************************");
+						System.out.println("there is identical ancestor---------");
+						System.out.println("repeated state");
+						System.out.printf("ethan : %s,%s  \n", ancestors.get(j)[0], ancestors.get(j)[1]);
+						System.out.printf("remaining imf : %s  \n", ancestors.get(j)[2]);
+						System.out.printf("no of carry : %s  \n", ancestors.get(j)[3]);
+						System.out.println("--------------------------------------");
+						System.out.println();
+						found = true;
+						break;
+
+					}
+				}
+				if (found == false) {
+
+					System.out.println("======================================");
+					System.out.printf("ethan : %s,%s  \n", stateSpaces.get(i).getState()[0],
+							stateSpaces.get(i).getState()[1]);
+					System.out.printf("remaining imf : %s  \n", stateSpaces.get(i).getState()[2]);
+					System.out.printf("no of carry : %s  \n", stateSpaces.get(i).getState()[3]);
+					System.out.printf("operator : %s  \n", stateSpaces.get(i).getOperator());
+					System.out.println("overall health is : " + stateSpaces.get(i).getState()[4]);
+					System.out.println("======================================");
+
+//					ancestors.add(stateSpaces.get(i).getState());
+					searchTreeNodesStack.push(stateSpaces.get(i));
+				}
+
+			}
+
+			System.out.println(" $$$$$$  stack size is : " + searchTreeNodesStack.size());
+			System.out.println("///////////////////////////////////////////////////////////////");
+			System.out.println();
+			counter++;
+			System.out.println(counter);
+		}
+//		return output;
+
+
+	}
 
 	public static void main(String[] args) {
 		MissionImpossible m = new MissionImpossible();
 //		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-		String grid = "5,5;1,2;2,4;1,3;20;3";
+		String grid = "4,5;2,2;0,2;1,2,3,4,2,1;30,50,60;3";
 
 		String totalHealth = grid.split(";")[4];
 		String submarine = grid.split(";")[2];
 		String ethan = grid.split(";")[1];
 		System.out.println(ethan + "ethan");
-		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0", "0,0" };
+		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0" };
 //		String[] goal = {"1","4","6","0","6,16,76,66,56,46"};
 
 		String[] members = grid.split(";")[3].split(",");
 		int membersNum = members.length / 2;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth };
 		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0);
-		System.out.print(BFS(init, grid, goal));
+		System.out.print(UCS(init, grid, goal));
 	}
 
 }
