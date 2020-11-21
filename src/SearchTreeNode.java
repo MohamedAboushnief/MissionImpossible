@@ -1,5 +1,4 @@
 
-
 public class SearchTreeNode {
 	private String[] state;
 	private SearchTreeNode parentNode;
@@ -54,4 +53,5 @@ public class SearchTreeNode {
 	public void setCostToRoot(int costToRoot) {
 		this.costToRoot = costToRoot;
 	}
+
 }

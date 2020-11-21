@@ -3,10 +3,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MissionImpossible extends SearchProblem {
-	static List<String> pickedIMF ;
+	static List<String> pickedIMF;
 
 	public MissionImpossible() {
-		pickedIMF = new ArrayList<String>(); 
+		pickedIMF = new ArrayList<String>();
 	}
 
 	public static String genGrid() {
@@ -165,12 +165,13 @@ public class MissionImpossible extends SearchProblem {
 			System.out.println((gridArray.get(posIMF).equals(posEthanAndIMF)
 					&& (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]))
 					&& (Integer.parseInt(parentState[2]) > 0) && !pickedIMF.contains(gridArray.get(posIMF))));
-			System.out.println("nafs el pos : "+(gridArray.get(posIMF).equals(posEthanAndIMF)));
-			System.out.println("a2al mn el carry : " + (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5])));
+			System.out.println("nafs el pos : " + (gridArray.get(posIMF).equals(posEthanAndIMF)));
+			System.out.println(
+					"a2al mn el carry : " + (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5])));
 			System.out.println("3addad el IMF akbar mn zero : " + (Integer.parseInt(parentState[2]) > 0));
 			System.out.println("ma3adaash 3l IMF : " + pickedIMF.contains(gridArray.get(posIMF)));
 			System.out.println("el picked members locations : ");
-			for(int i =0;i<pickedIMF.size();i++) {
+			for (int i = 0; i < pickedIMF.size(); i++) {
 				System.out.println(pickedIMF.get(i));
 			}
 
@@ -250,6 +251,7 @@ public class MissionImpossible extends SearchProblem {
 		}
 		return false;
 	}
+
 	public static String solve(String grid, String strategy, MissionImpossible m) {
 		String totalHealth = grid.split(";")[4];
 		String submarine = grid.split(";")[2];
@@ -259,30 +261,31 @@ public class MissionImpossible extends SearchProblem {
 		int membersNum = members.length / 2;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth };
 		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0);
-		if(strategy == "DFS") {
+		if (strategy == "DFS") {
 			return DFS(init, grid, goal, 100000, m);
 		}
-		if(strategy == "BFS") {
-			return BFS(init, grid, goal);
+		if (strategy == "BFS") {
+			return BFS(init, grid, goal, m);
 		}
-		if(strategy == "ID") {
+		if (strategy == "ID") {
 			return ID(init, grid, goal, 1000);
 		}
-		if(strategy == "UCS") {
+		if (strategy == "UCS") {
 			// Call UCS
 		}
-		if(strategy == "A*") {
+		if (strategy == "A*") {
 			// Call A*
 		}
-		if(strategy == "greedy") {
+		if (strategy == "greedy") {
 			// Call greedy
 		}
 		return "Please enter a correct strategy";
 	}
 
 	public static void main(String[] args) {
-		MissionImpossible m = new MissionImpossible();
-		String solved = m.solve(m.genGrid(), "ID", m);
-		System.out.println(solved);
+//		MissionImpossible m = new MissionImpossible();
+//		String solved = m.solve(m.genGrid(), "ID", m);
+//		System.out.println(solved);
+		gui.main(null);
 	}
 }
