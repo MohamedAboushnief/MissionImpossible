@@ -259,9 +259,10 @@ public class MissionImpossible extends SearchProblem {
 		boolean memberExist = false;
 		for (int j = 0; j < prevMembersLocations.length; j++) {
 			if ((prevMembersLocations[j]).equals(posEthanAndIMF)) {
+				System.out.println("INN A2rab wa7ed " + prevMembersLocations[j]);
 				memberExist = true;
 			} else {
-				if (j == 0) {
+				if (j == 0 || outputMembers.equals("")) { // || outputMembers.equals("") Important Extra !!
 					outputMembers = prevMembersLocations[j];
 				} else {
 					outputMembers = outputMembers + "," + prevMembersLocations[j];
@@ -286,6 +287,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[3] = newNoOfCarry + "";
 			newState[4] = newHealth;
 			newState[5] = outputMembers;
+			System.out.println(outputMembers + "remaining membersss cuz same position");
 			List<String> carryIMFMembers = Arrays.asList(outputMembers.split("(?<!\\G\\d+),"));
 			SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, costToRoot, 0);
 			int heuristicValue = heuristicFunction(carry, carryIMFMembers, grid.split(";")[2], carry.getOperator());
