@@ -164,7 +164,7 @@ public class MissionImpossible extends SearchProblem {
 			stateSpace.add(right);
 		}
 
-		System.out.println(grid);
+//		System.out.println(grid);
 		String[] prevMembersLocations = state.getState()[5].split("(?<!\\G\\d+),");
 		List<String> gridArray = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
 		int posIMF = 0;
@@ -173,8 +173,8 @@ public class MissionImpossible extends SearchProblem {
 		String outputMembers = "";
 		boolean memberExist = false;
 			for(int j = 0;j<prevMembersLocations.length;j++) {
-				System.out.println(prevMembersLocations[j]);
-				System.out.println(posEthanAndIMF);
+//				System.out.println(prevMembersLocations[j]);
+//				System.out.println(posEthanAndIMF);
 				if((prevMembersLocations[j]).equals(posEthanAndIMF)) {
 					memberExist = true;
 				}
@@ -188,10 +188,10 @@ public class MissionImpossible extends SearchProblem {
 					
 				}
 			}
-			System.out.println(memberExist && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ) && (Integer.parseInt(parentState[2]) > 0));
-			System.out.println(memberExist);
-			System.out.println((Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ));
-			System.out.println((Integer.parseInt(parentState[2]) > 0));
+//			System.out.println(memberExist && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ) && (Integer.parseInt(parentState[2]) > 0));
+//			System.out.println(memberExist);
+//			System.out.println((Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ));
+//			System.out.println((Integer.parseInt(parentState[2]) > 0));
 			if(memberExist && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]) ) && (Integer.parseInt(parentState[2]) > 0)) { // Creating carry state
 				int ethX = Integer.parseInt(parentState[0]);
 				int ethY = Integer.parseInt(parentState[1]);
