@@ -215,7 +215,7 @@ public abstract class SearchProblem {
 //		
 //	}
 
-	public static String Greedy(SearchTreeNode initialState, String grid, String[] goal) {
+	public static String Greedy1(SearchTreeNode initialState, String grid, String[] goal) {
 		ArrayList<SearchTreeNode> ancestors = new ArrayList<SearchTreeNode>();
 
 		Queue<SearchTreeNode> takeLessHeuristic = new LinkedList<SearchTreeNode>();
@@ -234,7 +234,6 @@ public abstract class SearchProblem {
 
 			if (takeLessHeuristic.size() > 0) {
 				ancestors.add(takeLessHeuristic.peek());
-				System.out.println(ancestors.size() + " sizeeeeeeeeeeeeeeeee");
 				ArrayList<SearchTreeNode> expandedNodes = MissionImpossible.stateTransition(takeLessHeuristic.remove(),
 						grid);
 
@@ -244,7 +243,7 @@ public abstract class SearchProblem {
 				}
 			}
 
-			Collections.sort(tempArray);
+			Collections.sort(tempArray); // putting the least heuristic node at the front
 
 			takeLessHeuristic.add(tempArray.get(0));
 			tempArray.remove(tempArray.get(0));
@@ -252,7 +251,7 @@ public abstract class SearchProblem {
 					+ takeLessHeuristic.peek().getHeuristicValue() + " eth x" + takeLessHeuristic.peek().getState()[0]
 					+ " ethy " + takeLessHeuristic.peek().getState()[1] + " remaining IMF "
 					+ takeLessHeuristic.peek().getState()[2] + " number of cary "
-					+ takeLessHeuristic.peek().getState()[3]);
+					+ takeLessHeuristic.peek().getState()[3] + " the health :" + takeLessHeuristic.peek().getState()[4]);
 
 //			SearchTreeNode peek = takeLessHeuristic.remove();
 //			for (int i = 0; i < takeLessHeuristic.size(); i++) {
@@ -275,7 +274,105 @@ public abstract class SearchProblem {
 //				System.out.println(check[0] + check[1] + check[2] + check[3] + check[4]);
 //				System.out.println(anc[0] + anc[1] + anc[2] + anc[3] + anc[4]);
 				if (Arrays.equals(check, anc)) {
-					System.out.println("da5555555555555555555555555555555");
+					found = true;
+					break;
+				}
+
+			}
+
+			if (found) {
+
+				takeLessHeuristic.remove();
+
+			} else {
+				String g = "";
+				String n = "";
+				for (int k = 0; k < goal.length; k++) {
+					g += goal[k];
+					n += checkNode.getState()[k];
+				}
+				if (g.equals(n)) { // check goal test done
+					String lastOp = checkNode.getOperator();
+					while (true) {
+						SearchTreeNode parentOp = checkNode.getParentNode();
+						if (parentOp.getOperator() == null) {
+							break;
+						} else {
+							output = parentOp.getOperator() + output;
+							checkNode = parentOp;
+						}
+					}
+					System.out.println("Goal Reached ");
+					output += lastOp;
+					return output;
+				}
+
+			}
+
+		}
+
+	}
+	
+	
+	public static String Greedy2(SearchTreeNode initialState, String grid, String[] goal) {
+		ArrayList<SearchTreeNode> ancestors = new ArrayList<SearchTreeNode>();
+
+		Queue<SearchTreeNode> takeLessHeuristic = new LinkedList<SearchTreeNode>();
+		MissionImpossible m = new MissionImpossible();
+		List<String> imfMembers = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
+		String output = "";
+		String[] imfHealth = initialState.getState()[4].split(",");
+		int heuristicValue = m.heuristicFunction_2(initialState, imfMembers, imfHealth);
+		initialState.setHeuristicValue(heuristicValue);
+
+		takeLessHeuristic.add(initialState);
+		System.out.println(initialState.getHeuristicValue() + "heurrists");
+		ArrayList<SearchTreeNode> tempArray = new ArrayList<SearchTreeNode>();
+		int coun = 0;
+		while (true) {
+
+			if (takeLessHeuristic.size() > 0) {
+				ancestors.add(takeLessHeuristic.peek());
+				ArrayList<SearchTreeNode> expandedNodes = MissionImpossible.stateTransition(takeLessHeuristic.remove(),
+						grid);
+
+				for (int i = 0; i < expandedNodes.size(); i++) {
+					tempArray.add(expandedNodes.get(i));
+					System.err.println(expandedNodes.get(i).getOperator() + expandedNodes.get(i).getHeuristicValue());
+				}
+			}
+
+			Collections.sort(tempArray); // putting the least heuristic node at the front
+
+			takeLessHeuristic.add(tempArray.get(0));
+			tempArray.remove(tempArray.get(0));
+			System.out.println(takeLessHeuristic.peek().getOperator() + " first "
+					+ takeLessHeuristic.peek().getHeuristicValue() + " eth x" + takeLessHeuristic.peek().getState()[0]
+					+ " ethy " + takeLessHeuristic.peek().getState()[1] + " remaining IMF "
+					+ takeLessHeuristic.peek().getState()[2] + " number of cary "
+					+ takeLessHeuristic.peek().getState()[3] + " the health :" + takeLessHeuristic.peek().getState()[4]);
+
+//			SearchTreeNode peek = takeLessHeuristic.remove();
+//			for (int i = 0; i < takeLessHeuristic.size(); i++) {
+//				tempArray.add(takeLessHeuristic.remove());
+//			}
+//			takeLessHeuristic.add(peek);
+//			if(coun == 100) {
+//				return output;
+//			}
+			coun ++;
+			boolean found = false;
+			SearchTreeNode checkNode = takeLessHeuristic.peek();
+
+			for (int i = 0; i < ancestors.size(); i++) { // Check if the node is expanded before and if so remove it
+				String[] check = { checkNode.getState()[0], checkNode.getState()[1], checkNode.getState()[2],
+						checkNode.getState()[3], checkNode.getOperator() };
+				String[] anc = { ancestors.get(i).getState()[0], ancestors.get(i).getState()[1],
+						ancestors.get(i).getState()[2], ancestors.get(i).getState()[3],
+						ancestors.get(i).getOperator() };
+//				System.out.println(check[0] + check[1] + check[2] + check[3] + check[4]);
+//				System.out.println(anc[0] + anc[1] + anc[2] + anc[3] + anc[4]);
+				if (Arrays.equals(check, anc)) {
 					found = true;
 					break;
 				}
@@ -315,10 +412,11 @@ public abstract class SearchProblem {
 
 	}
 
+
 	public static void main(String[] args) {
 		MissionImpossible m = new MissionImpossible();
 //		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-		String grid = "10,10;1,1;1,9;1,2,1,3,1,4,1,7;7,8,6,7;5";  // tarteeb el imf members 3al grid check.....
+		String grid = "5,5;1,1;1,4;1,2,1,3;7,6;6";  
 		//String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
 
 		String totalHealth = grid.split(";")[4];
@@ -341,7 +439,9 @@ public abstract class SearchProblem {
 		int membersNum = members.length; 
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
 		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0);
-		System.out.print(Greedy(init, grid, goal));
+		//System.out.print(Greedy1(init, grid, goal));
+		System.out.print(Greedy2(init, grid, goal));
+
 	}
 
 }
