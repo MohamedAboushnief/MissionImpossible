@@ -229,14 +229,14 @@ public abstract class SearchProblem {
 
 		takeLessHeuristic.add(initialState);
 		ArrayList<SearchTreeNode> tempArray = new ArrayList<SearchTreeNode>();
-		int coun = 0;
+		int numberOfNodesExpanded = 0;
 		while (true) {
 
 			if (takeLessHeuristic.size() > 0) {
 				ancestors.add(takeLessHeuristic.peek());
 				ArrayList<SearchTreeNode> expandedNodes = MissionImpossible.stateTransition(takeLessHeuristic.remove(),
 						grid);
-
+				numberOfNodesExpanded ++;
 				for (int i = 0; i < expandedNodes.size(); i++) {
 					tempArray.add(expandedNodes.get(i));
 				}
@@ -289,7 +289,7 @@ public abstract class SearchProblem {
 					takeLessHeuristic.peek().setHeuristicValue(0);
 					System.out.println("Goal Reached " + "and the goal heuristic value is = "
 							+ takeLessHeuristic.peek().getHeuristicValue());
-					output += lastOp;
+					output += lastOp + ";" + numberOfNodesExpanded;
 					return output;
 				}
 
@@ -312,14 +312,14 @@ public abstract class SearchProblem {
 
 		takeLessHeuristic.add(initialState);
 		ArrayList<SearchTreeNode> tempArray = new ArrayList<SearchTreeNode>();
-		int coun = 0;
+		int numberOfNodesExpanded = 0;
 		while (true) {
 
 			if (takeLessHeuristic.size() > 0) {
 				ancestors.add(takeLessHeuristic.peek());
 				ArrayList<SearchTreeNode> expandedNodes = MissionImpossible.stateTransition(takeLessHeuristic.remove(),
 						grid);
-
+				numberOfNodesExpanded ++;
 				for (int i = 0; i < expandedNodes.size(); i++) {
 					tempArray.add(expandedNodes.get(i));
 
@@ -374,7 +374,7 @@ public abstract class SearchProblem {
 					takeLessHeuristic.peek().setHeuristicValue(0);
 					System.out.println("Goal Reached " + "and the goal heuristic value is = "
 							+ takeLessHeuristic.peek().getHeuristicValue());
-					output += lastOp;
+					output += lastOp + ";" + numberOfNodesExpanded;
 					return output;
 				}
 
@@ -408,8 +408,8 @@ public abstract class SearchProblem {
 		int membersNum = members.length;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
 		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0);
-		//System.out.print(Greedy1(init, grid, goal));
-		System.out.print(Greedy2(init, grid, goal));
+		System.out.print(Greedy1(init, grid, goal));
+		//System.out.print(Greedy2(init, grid, goal));
 
 	}
 
