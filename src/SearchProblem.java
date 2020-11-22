@@ -1,12 +1,11 @@
 import java.util.ArrayList;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Stack;
-
-//import jdk.javadoc.internal.doclets.toolkit.util.Comparators;
-
 import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -255,10 +254,105 @@ public abstract class SearchProblem {
 		while (current.getParentNode() != null) {
 			output = current.getOperator() + "," + output;
 			current = current.getParentNode();
-
+			
 		}
 		return output+exploredNodes;
 	}
+			
+
+	public static boolean CheckGoal(SearchTreeNode currentNode, String[] goalState) {
+
+		if (currentNode.getState()[0].equals(goalState[0]) && currentNode.getState()[1].equals(goalState[1])
+				&& currentNode.getState()[2].equals(goalState[2]) && currentNode.getState()[3].equals(goalState[3])) {
+			return true;
+
+		}
+		return false;
+	}
+
+	// function that returns the path to the goal
+	public static String getPath(SearchTreeNode Node) {
+		String path = "";
+		System.out.println("======================================");
+		System.out.printf("ethan : %s,%s  \n", Node.getState()[0], Node.getState()[1]);
+		System.out.printf("remaining imf : %s  \n", Node.getState()[2]);
+		System.out.printf("no of carry : %s  \n", Node.getState()[3]);
+		System.out.printf("operator : %s  \n", Node.getOperator());
+		System.out.println("overall health is : " + Node.getState()[4]);
+		System.out.println("cost to root is : " + Node.getCostToRoot());
+		System.out.println("imf locations  : " + Node.getState()[5]);
+
+		System.out.println("======================================");
+
+		if (Node.getParentNode() == null) {
+			return "";
+		} else {
+
+			String s = Node.getParentNode().getOperator();
+			if (s == null) {
+				return getPath(Node.getParentNode()) + "";
+			} else {
+				return getPath(Node.getParentNode()) + s + ",";
+			}
+
+		}
+
+	}
+
+	
+
+	public static String UCS(SearchTreeNode intialState, String grid, String[] goalState) {
+
+		String output = "";
+		Hashtable<String, Integer> ancestors = new Hashtable<String, Integer>();
+		PriorityQueue<SearchTreeNode> searchTreeNodesStack = new PriorityQueue<SearchTreeNode>();
+
+		if (intialState == null) {
+			return output;
+
+		}
+
+		// add initial state in the stack
+		searchTreeNodesStack.add(intialState);
+		int noOfExpansions = 0;
+		while (true) {
+
+			// get the first element
+			SearchTreeNode currentNode = searchTreeNodesStack.peek();
+
+			// add the first element in the ancestors hashtable
+			ancestors.put(stateToString(currentNode), 0);
+
+			if (currentNode.getOperator() != null) {
+				output += currentNode.getOperator();
+			}
+
+			// check if current node is the goal state
+			if (CheckGoal(currentNode, goalState)) {
+				System.out.println("Reached Goal State !!!!!!!!");
+				String path = getPath(currentNode);
+				return path +currentNode.getOperator()+ ";" + noOfExpansions;
+			}
+
+			// expand current node
+			ArrayList<SearchTreeNode> stateSpaces = MissionImpossible.stateTransition(searchTreeNodesStack.remove(),
+					grid,0);
+			noOfExpansions++;
+
+			for (int i = 0; i < stateSpaces.size(); i++) {
+				// check for repeated states
+				if (!ancestors.containsKey(stateToString(stateSpaces.get(i)))) {
+					searchTreeNodesStack.add(stateSpaces.get(i));
+					ancestors.put(stateToString(stateSpaces.get(i)), 0);
+
+				}
+
+			}
+
+		}
+
+	}
+		
 	
 	public static String stateToString(SearchTreeNode state) {
 		String tempState = (state).getState()[0] + "," + (state).getState()[1] + ","
@@ -277,7 +371,7 @@ public abstract class SearchProblem {
 	public static void main(String[] args) {
 		MissionImpossible m = new MissionImpossible();
 //		String grid = "15,15;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
+		String grid ="15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
 //		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
 
 		String totalHealth = grid.split(";")[4];
@@ -297,9 +391,9 @@ public abstract class SearchProblem {
 		}
 		int membersNum = members.length;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
-		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0);
+		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "UC");
 		//System.out.print(Greedy1(init, grid, goal));
-		System.out.print(BFS(init, grid, goal));
+		System.out.print(UCS(init, grid, goal));
 
 	}
 
