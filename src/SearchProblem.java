@@ -379,21 +379,19 @@ public abstract class SearchProblem {
 				break;
 			}else {
 				for(SearchTreeNode newState: MissionImpossible.stateTransition(current,grid)) {
-					if (!prevStates.contains(stateToString(newState))) {
+					if (!prevStates.containsKey(stateToString(newState))) {
 						prevStates.put(stateToString(newState), 0);
 						toTraverse.add(newState);
 					}
 				}
 			}
 		}
-		System.out.println(current.getParentNode() == null);
+		System.out.println(stateToString(current));
 		while (current.getParentNode() != null) {
 			output = current.getOperator() + "," + output;
 			current = current.getParentNode();
 
 		}
-		
-		System.out.println(output);
 		return output;
 	}
 	
@@ -401,28 +399,24 @@ public abstract class SearchProblem {
 	
 	public static String DFSnew(SearchTreeNode intialState, String grid, String[] goalState) {
 		String output = "";
-		int c = 0;
 		Stack<SearchTreeNode> toTraverse = new Stack<SearchTreeNode>();
 		Hashtable<String, Integer> prevStates = new Hashtable<String, Integer>();
 		toTraverse.push(intialState);
 		prevStates.put(stateToString(intialState), 0);
 		SearchTreeNode current = null;
 		while(!toTraverse.isEmpty()) {
-			c++;
 			current = toTraverse.pop();
 			if(stateToString(current).equals(arrayToString(goalState))) {
 				break;
 			}else {
 				for(SearchTreeNode newState: MissionImpossible.stateTransition(current,grid)) {
-					if (!prevStates.contains(stateToString(newState))) {
+					if (!prevStates.containsKey(stateToString(newState))) {
 						prevStates.put(stateToString(newState), 0);
 						toTraverse.push(newState);
 					}
 				}
 			}
-			System.out.println(c);
 		}
-		System.out.println(current.getParentNode() == null);
 		while (current.getParentNode() != null) {
 			output = current.getOperator() + "," + output;
 			current = current.getParentNode();
@@ -451,10 +445,14 @@ public abstract class SearchProblem {
 
 	public static void main(String[] args) {
 		MissionImpossible m = new MissionImpossible();
-		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
+		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
+		
 		//String grid = "10,10;1,1;1,9;1,2,1,3,1,4,1,7;7,8,6,7;5";  // tarteeb el imf members 3al grid check.....
 		//String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-		//String grid = "7,7;1,2;1,5;1,3,1,4;50,60;3";
+		//String grid = "7,7;1,2;1,6;1,3,1,4;50,60;3";
+		//String grid = "5,5;2,1;1,0;1,3,4,2,4,1,3,1;54,31,39,98;2";
+		
+		
 		String totalHealth = grid.split(";")[4];
 		String submarine = grid.split(";")[2];
 		String ethan = grid.split(";")[1];
@@ -471,20 +469,10 @@ public abstract class SearchProblem {
 				mem += members[i];
 			}
 		}
-		System.out.println(mem + " is the members");
 		int membersNum = members.length; 
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
 		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0);
-//		SearchTreeNode test = new SearchTreeNode(state, null, null, 0, 0, 0);
-//		Hashtable<String, Integer> prevStates = new Hashtable<String, Integer>();
-//		prevStates.put(stateToString(test), 1);
-		System.out.print(DFSnew(init, grid, goal));
-//		if(prevStates.containsKey(stateToString(init))) {
-//			System.out.println("tes");
-//		}
-//		else {
-//			System.out.println("mesh tes");
-//		}
+		System.out.print(BFSnew(init, grid, goal));
 		
 	}
 

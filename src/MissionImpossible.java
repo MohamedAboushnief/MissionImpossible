@@ -132,7 +132,8 @@ public class MissionImpossible extends SearchProblem {
 
 		}
 
-
+//		System.out.println(parentState[0]);
+//		System.out.println(parentState[1]);
 		if (!isTop) { // Creating up state
 			int ethX = Integer.parseInt(parentState[0]);
 			int ethY = Integer.parseInt(parentState[1]);
@@ -259,7 +260,6 @@ public class MissionImpossible extends SearchProblem {
 		boolean memberExist = false;
 		for (int j = 0; j < prevMembersLocations.length; j++) {
 			if ((prevMembersLocations[j]).equals(posEthanAndIMF)) {
-				System.out.println("INN A2rab wa7ed " + prevMembersLocations[j]);
 				memberExist = true;
 			} else {
 				if (j == 0 || outputMembers.equals("")) { // || outputMembers.equals("") Important Extra !!
@@ -287,7 +287,6 @@ public class MissionImpossible extends SearchProblem {
 			newState[3] = newNoOfCarry + "";
 			newState[4] = newHealth;
 			newState[5] = outputMembers;
-			System.out.println(outputMembers + "remaining membersss cuz same position");
 			List<String> carryIMFMembers = Arrays.asList(outputMembers.split("(?<!\\G\\d+),"));
 			SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, costToRoot, 0);
 			int heuristicValue = heuristicFunction(carry, carryIMFMembers, grid.split(";")[2], carry.getOperator());
@@ -320,29 +319,28 @@ public class MissionImpossible extends SearchProblem {
 	}
 
 	public static boolean isTop(String ethanPos) {
-		if (ethanPos.charAt(0) == '0') {
+		if (ethanPos.equals("0")) {
 			return true;
 		}
 		return false;
 	}
 
 	public static boolean isDown(String maxGrid, String ethanPos) {
-		if (ethanPos.charAt(0) == maxGrid.charAt(0)) {
-
+		if (ethanPos.equals(maxGrid)) {
 			return true;
 		}
 		return false;
 	}
 
 	public static boolean isLeft(String ethanPos) {
-		if (ethanPos.charAt(0) == '0') {
+		if (ethanPos.equals("0")) {
 			return true;
 		}
 		return false;
 	}
 
 	public static boolean isRight(String maxGrid, String ethanPos) {
-		if (ethanPos.charAt(0) == maxGrid.charAt(0)) {
+		if (ethanPos.equals(maxGrid)) {
 			return true;
 		}
 		return false;
