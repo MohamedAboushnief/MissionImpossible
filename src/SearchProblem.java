@@ -227,7 +227,7 @@ public abstract class SearchProblem {
 		}
 
 	}
-	
+
 	public static String BFS(SearchTreeNode intialState, String grid, String[] goalState) {
 		String output = "";
 		int exploredNodes = 0;
@@ -236,15 +236,15 @@ public abstract class SearchProblem {
 		toTraverse.add(intialState);
 		prevStates.put(stateToString(intialState), 0);
 		SearchTreeNode current = null;
-		while(!toTraverse.isEmpty()) {
+		while (!toTraverse.isEmpty()) {
 			exploredNodes++;
 			current = toTraverse.remove();
-			if(stateToString(current).equals(arrayToString(goalState))) {
+			if (stateToString(current).equals(arrayToString(goalState))) {
 				break;
-			}else {
-				for(SearchTreeNode newState: MissionImpossible.stateTransition(current,grid,0)) {
+			} else {
+				for (SearchTreeNode newState : MissionImpossible.stateTransition(current, grid, 0)) {
 					if (!prevStates.containsKey(stateToString(newState))) {
-						
+
 						prevStates.put(stateToString(newState), 0);
 						toTraverse.add(newState);
 					}
@@ -254,11 +254,10 @@ public abstract class SearchProblem {
 		while (current.getParentNode() != null) {
 			output = current.getOperator() + "," + output;
 			current = current.getParentNode();
-			
+
 		}
-		return output+exploredNodes;
+		return output + exploredNodes;
 	}
-			
 
 	public static boolean CheckGoal(SearchTreeNode currentNode, String[] goalState) {
 
@@ -272,18 +271,6 @@ public abstract class SearchProblem {
 
 	// function that returns the path to the goal
 	public static String getPath(SearchTreeNode Node) {
-		String path = "";
-		System.out.println("======================================");
-		System.out.printf("ethan : %s,%s  \n", Node.getState()[0], Node.getState()[1]);
-		System.out.printf("remaining imf : %s  \n", Node.getState()[2]);
-		System.out.printf("no of carry : %s  \n", Node.getState()[3]);
-		System.out.printf("operator : %s  \n", Node.getOperator());
-		System.out.println("overall health is : " + Node.getState()[4]);
-		System.out.println("cost to root is : " + Node.getCostToRoot());
-		System.out.println("imf locations  : " + Node.getState()[5]);
-
-		System.out.println("======================================");
-
 		if (Node.getParentNode() == null) {
 			return "";
 		} else {
@@ -299,7 +286,17 @@ public abstract class SearchProblem {
 
 	}
 
-	
+	public static int getNoOfdeaths(SearchTreeNode node) {
+		String health = node.getHealth();
+		int deaths = 0;
+		for (int i = 0; i < health.split(",").length; i++) {
+			if (health.split(",")[i].equals("0")) {
+				deaths++;
+			}
+		}
+		return deaths;
+
+	}
 
 	public static String UCS(SearchTreeNode intialState, String grid, String[] goalState) {
 
@@ -331,12 +328,16 @@ public abstract class SearchProblem {
 			if (CheckGoal(currentNode, goalState)) {
 				System.out.println("Reached Goal State !!!!!!!!");
 				String path = getPath(currentNode);
-				return path +currentNode.getOperator()+ ";" + noOfExpansions;
+
+				int noOfdeaths = getNoOfdeaths(currentNode);
+
+				return path + currentNode.getOperator() + ";" + noOfdeaths + ";" + currentNode.getHealth() + ";"
+						+ noOfExpansions;
 			}
 
 			// expand current node
 			ArrayList<SearchTreeNode> stateSpaces = MissionImpossible.stateTransition(searchTreeNodesStack.remove(),
-					grid,0);
+					grid, 0);
 			noOfExpansions++;
 
 			for (int i = 0; i < stateSpaces.size(); i++) {
@@ -352,26 +353,22 @@ public abstract class SearchProblem {
 		}
 
 	}
-		
-	
+
 	public static String stateToString(SearchTreeNode state) {
-		String tempState = (state).getState()[0] + "," + (state).getState()[1] + ","
-					+ (state).getState()[2] + "," + (state).getState()[3];
+		String tempState = (state).getState()[0] + "," + (state).getState()[1] + "," + (state).getState()[2] + ","
+				+ (state).getState()[3];
 		return tempState;
 	}
+
 	public static String arrayToString(String[] state) {
-		String tempState = state[0] + "," + state[1] + ","
-					+ state[2] + "," + state[3];
+		String tempState = state[0] + "," + state[1] + "," + state[2] + "," + state[3];
 		return tempState;
 	}
-	
-	
-	
 
 	public static void main(String[] args) {
 		MissionImpossible m = new MissionImpossible();
 //		String grid = "15,15;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-		String grid ="15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
+		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
 //		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
 
 		String totalHealth = grid.split(";")[4];
@@ -379,7 +376,7 @@ public abstract class SearchProblem {
 		String ethan = grid.split(";")[1];
 		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0" };
 //		String[] goal = {"1","4","6","0","6,16,76,66,56,46"};
-
+		String CarriedPositions = "";
 		String[] members = grid.split(";")[3].split("(?<!\\G\\d+),");
 		String mem = "";
 		for (int i = 0; i < members.length; i++) {
@@ -388,11 +385,13 @@ public abstract class SearchProblem {
 			} else {
 				mem += members[i];
 			}
+			CarriedPositions += "0";
 		}
+
 		int membersNum = members.length;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
-		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "UC");
-		//System.out.print(Greedy1(init, grid, goal));
+		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "UC", totalHealth, CarriedPositions);
+		// System.out.print(Greedy1(init, grid, goal));
 		System.out.print(UCS(init, grid, goal));
 
 	}

@@ -7,9 +7,12 @@ public class SearchTreeNode implements Comparable {
 	private int costToRoot;
 	private int heuristicValue;
 	private String strategy;
+	private String health;
+	private String CarriedPositions;
+	
 
 	public SearchTreeNode(String[] state, SearchTreeNode parentNode, String operator, int depth, int costToRoot,
-			int heuristicValue, String strategy) {
+			int heuristicValue, String strategy, String health, String CarriedPositions) {
 		this.state = state;
 		this.parentNode = parentNode;
 		this.operator = operator;
@@ -17,7 +20,8 @@ public class SearchTreeNode implements Comparable {
 		this.costToRoot = costToRoot;
 		this.heuristicValue = heuristicValue;
 		this.strategy = strategy;
-
+		this.health=health;
+		this.CarriedPositions=CarriedPositions;
 	}
 
 	public String[] getState() {
@@ -80,6 +84,22 @@ public class SearchTreeNode implements Comparable {
 			return ((Integer) this.getHeuristicValue()).compareTo(((SearchTreeNode) o).getHeuristicValue());
 		}
 
+	}
+
+	public String getHealth() {
+		return health;
+	}
+
+	public void setHealth(String health) {
+		this.health = health;
+	}
+
+	public String getCarriedPositions() {
+		return CarriedPositions;
+	}
+
+	public void setCarriedPositions(String carriedPositions) {
+		this.CarriedPositions = carriedPositions;
 	}
 
 }

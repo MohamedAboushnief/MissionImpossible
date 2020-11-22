@@ -115,8 +115,8 @@ public class MissionImpossible extends SearchProblem {
 		// Adding at the end the distance to the submarine and adding number of carry
 		// The best case is that the number of IMF members and the distance to the
 		// submarine is zero
-		
-		if (heurNumber == 0) {  // to let the goal state only have the zero heuristic value 
+
+		if (heurNumber == 0) { // to let the goal state only have the zero heuristic value
 			heurNumber += 1;
 		}
 
@@ -131,7 +131,7 @@ public class MissionImpossible extends SearchProblem {
 		// SUM | ethX - imfX | + | ethY - imfY | where imf member has the least health
 		int heurNumber = 0;
 		int index = 0;
-		if (!imfMembers.get(0).equals("") && !healthsOfImfMembers[0].equals("")) { // getting the minimum imf health 
+		if (!imfMembers.get(0).equals("") && !healthsOfImfMembers[0].equals("")) { // getting the minimum imf health
 			int minhealth = Integer.parseInt(healthsOfImfMembers[0]);
 			for (int i = 0; i < healthsOfImfMembers.length; i++) {
 				if (minhealth > Integer.parseInt(healthsOfImfMembers[i])) {
@@ -169,6 +169,9 @@ public class MissionImpossible extends SearchProblem {
 
 		List<String> imfMembers = new ArrayList<String>();
 
+		String Health = state.getHealth();
+		String CarriedPositions = state.getCarriedPositions();
+
 		if (imfMembersLocations.length() > 0) {
 			imfMembers = Arrays.asList(imfMembersLocations.split("(?<!\\G\\d+),"));
 		} else {
@@ -195,6 +198,37 @@ public class MissionImpossible extends SearchProblem {
 			}
 		}
 
+		////////////////////////////////////
+
+		String newHealth2 = "";
+
+		for (int i = 0; i < Health.split(",").length; i++) {
+			// if last element dont add coma
+
+			if (i == Health.split(",").length - 1) {
+
+				if (CarriedPositions.charAt(i) == '1') {
+					newHealth2 += (Integer.parseInt(Health.split(",")[i]));
+				} else if ((Integer.parseInt(Health.split(",")[i]) - 2) < 0) {
+					newHealth2 += "0";
+				} else {
+					newHealth2 += (Integer.parseInt(Health.split(",")[i]) - 2);
+				}
+			} else {
+
+				if (CarriedPositions.charAt(i) == '1') {
+					newHealth2 += (Integer.parseInt(Health.split(",")[i])) + ",";
+				} else if ((Integer.parseInt(Health.split(",")[i]) - 2) < 0) {
+					newHealth2 += "0" + ",";
+				} else {
+					newHealth2 += (Integer.parseInt(Health.split(",")[i]) - 2) + ",";
+				}
+			}
+
+		}
+
+		////////////////////////////////////
+
 		if (imfMembersLocations.length() > 0) {
 			imfMembers = Arrays.asList(imfMembersLocations.split("(?<!\\G\\d+),"));
 		} else {
@@ -216,12 +250,12 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode up = new SearchTreeNode(newState, state, "Up", newDepth, newCostToRoot, 0, state.getStrategyName());
+			SearchTreeNode up = new SearchTreeNode(newState, state, "Up", newDepth, newCostToRoot, 0,
+					state.getStrategyName(), newHealth2, CarriedPositions);
 			int heuristicValue = 0;
-			if(heuristicFlag == 1) {
+			if (heuristicFlag == 1) {
 				heuristicValue = heuristicFunction(up, imfMembers, grid.split(";")[2], up.getOperator());
-			}
-			else if(heuristicFlag == 2) {
+			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(up, imfMembers, newHealth.split(","), up.getOperator());
 			}
 
@@ -242,14 +276,13 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode left = new SearchTreeNode(newState, state, "Left", newDepth, newCostToRoot, 0, state.getStrategyName());
-	
+			SearchTreeNode left = new SearchTreeNode(newState, state, "Left", newDepth, newCostToRoot, 0,
+					state.getStrategyName(), newHealth2, CarriedPositions);
 
 			int heuristicValue = 0;
-			if(heuristicFlag == 1) {
+			if (heuristicFlag == 1) {
 				heuristicValue = heuristicFunction(left, imfMembers, grid.split(";")[2], left.getOperator());
-			}
-			else if(heuristicFlag == 2){
+			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(left, imfMembers, newHealth.split(","), left.getOperator());
 			}
 
@@ -270,12 +303,12 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode down = new SearchTreeNode(newState, state, "Down", newDepth, newCostToRoot, 0, state.getStrategyName());
+			SearchTreeNode down = new SearchTreeNode(newState, state, "Down", newDepth, newCostToRoot, 0,
+					state.getStrategyName(), newHealth2, CarriedPositions);
 			int heuristicValue = 0;
-			if(heuristicFlag == 1) {
+			if (heuristicFlag == 1) {
 				heuristicValue = heuristicFunction(down, imfMembers, grid.split(";")[2], down.getOperator());
-			}
-			else if(heuristicFlag == 2){
+			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(down, imfMembers, newHealth.split(","), down.getOperator());
 			}
 
@@ -296,12 +329,12 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode right = new SearchTreeNode(newState, state, "Right", newDepth, newCostToRoot, 0, state.getStrategyName());
+			SearchTreeNode right = new SearchTreeNode(newState, state, "Right", newDepth, newCostToRoot, 0,
+					state.getStrategyName(), newHealth2, CarriedPositions);
 			int heuristicValue = 0;
-			if(heuristicFlag == 1) {
+			if (heuristicFlag == 1) {
 				heuristicValue = heuristicFunction(right, imfMembers, grid.split(";")[2], right.getOperator());
-			}
-			else if(heuristicFlag == 2){
+			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(right, imfMembers, newHealth.split(","), right.getOperator());
 			}
 
@@ -309,18 +342,17 @@ public class MissionImpossible extends SearchProblem {
 			stateSpace.add(right);
 		}
 
-
-
 		String[] prevMembersLocations = state.getState()[5].split("(?<!\\G\\d+),");
 		String posEthanAndIMF = parentState[0] + "," + parentState[1];
 
 		String outputMembers = "";
 		String afterCarryHealth = "";
-
+		String healthOfCarriedIMFs = "";
 		boolean memberExist = false;
 		for (int j = 0; j < prevMembersLocations.length; j++) {
 			if ((prevMembersLocations[j]).equals(posEthanAndIMF)) {
 				memberExist = true;
+
 				for (int k = 0; k < newHealth.split(",").length; k++) {
 					if (j != k) {
 						if (afterCarryHealth.length() == 0) {
@@ -331,6 +363,8 @@ public class MissionImpossible extends SearchProblem {
 
 							afterCarryHealth += "," + newHealth.split(",")[k];
 						}
+					} else {
+
 					}
 				}
 			} else {
@@ -342,6 +376,24 @@ public class MissionImpossible extends SearchProblem {
 
 			}
 		}
+
+		///////////////////////////////////////////////////
+
+		String[] locationsIMF = splittedGrid[3].split("(?<!\\G\\d+),");
+
+		char[] CarriedString = CarriedPositions.toCharArray();
+
+		for (int j = 0; j < locationsIMF.length; j++) {
+
+			if ((locationsIMF[j]).equals(posEthanAndIMF)) {
+				CarriedString[j] = '1';
+
+			}
+
+		}
+		String newCarriedString = String.valueOf(CarriedString);
+
+		///////////////////////////////////////////////////
 
 		if (memberExist && (Integer.parseInt(parentState[3]) < Integer.parseInt(grid.split(";")[5]))
 				&& (Integer.parseInt(parentState[2]) > 0)) { // Creating carry state
@@ -361,12 +413,12 @@ public class MissionImpossible extends SearchProblem {
 			newState[5] = outputMembers;
 			List<String> carryIMFMembers = Arrays.asList(outputMembers.split("(?<!\\G\\d+),"));
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, newCostToRoot, 0, state.getStrategyName());
+			SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, newCostToRoot, 0,
+					state.getStrategyName(), newHealth2, newCarriedString);
 			int heuristicValue = 0;
-			if(heuristicFlag == 1) {
+			if (heuristicFlag == 1) {
 				heuristicValue = heuristicFunction(carry, carryIMFMembers, grid.split(";")[2], carry.getOperator());
-			}
-			else if(heuristicFlag == 2){
+			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(carry, imfMembers, newHealth.split(","), carry.getOperator());
 			}
 			carry.setHeuristicValue(heuristicValue);
@@ -388,12 +440,12 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode drop = new SearchTreeNode(newState, state, "Drop", newDepth, newCostToRoot, 0 ,state.getStrategyName());
+			SearchTreeNode drop = new SearchTreeNode(newState, state, "Drop", newDepth, newCostToRoot, 0,
+					state.getStrategyName(), newHealth2, CarriedPositions);
 			int heuristicValue = 0;
-			if(heuristicFlag == 1) {
+			if (heuristicFlag == 1) {
 				heuristicValue = heuristicFunction(drop, imfMembers, grid.split(";")[2], drop.getOperator());
-			}
-			else if(heuristicFlag == 2){
+			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(drop, imfMembers, newHealth.split(","), drop.getOperator());
 			}
 			drop.setHeuristicValue(heuristicValue);
