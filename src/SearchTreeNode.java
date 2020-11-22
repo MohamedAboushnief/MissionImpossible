@@ -1,16 +1,21 @@
-public class SearchTreeNode {
+
+
+public class SearchTreeNode implements Comparable{
 	private String[] state;
-	private String parentNode;
+	private SearchTreeNode parentNode;
 	private String operator;
 	private int depth;
 	private int costToRoot;
+	private int heuristicValue;
 
-	public SearchTreeNode(String[] state, String parentNode, String operator, int depth, int costToRoot) {
+	public SearchTreeNode(String[] state, SearchTreeNode parentNode, String operator, int depth, int costToRoot, int heuristicValue) {
 		this.state = state;
 		this.parentNode = parentNode;
 		this.operator = operator;
 		this.depth = depth;
 		this.costToRoot = costToRoot;
+		this.heuristicValue = heuristicValue;
+		
 	}
 
 	public String[] getState() {
@@ -21,11 +26,11 @@ public class SearchTreeNode {
 		this.state = state;
 	}
 
-	public String getParentNode() {
+	public SearchTreeNode getParentNode() {
 		return parentNode;
 	}
 
-	public void setParentNode(String parentNode) {
+	public void setParentNode(SearchTreeNode parentNode) {
 		this.parentNode = parentNode;
 	}
 
@@ -48,8 +53,21 @@ public class SearchTreeNode {
 	public int getCostToRoot() {
 		return costToRoot;
 	}
+	
 
 	public void setCostToRoot(int costToRoot) {
 		this.costToRoot = costToRoot;
+	}
+	
+	public int getHeuristicValue() {
+		return heuristicValue;
+	}
+	
+	public void setHeuristicValue(int heuristicValue) {
+		this.heuristicValue = heuristicValue;
+	}
+
+	public int compareTo(Object node) {
+		return((Integer) this.getHeuristicValue()).compareTo(((SearchTreeNode) node).getHeuristicValue());
 	}
 }
