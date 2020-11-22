@@ -11,70 +11,71 @@ import java.util.Queue;
 import java.util.*;
 
 public abstract class SearchProblem {
-
-	public static String BFS(SearchTreeNode intialState, String grid, String[] goalState, MissionImpossible m) {
-		Queue<SearchTreeNode> searchTreeNodesQueue = new LinkedList<SearchTreeNode>();
+	
+	public static String DFS(SearchTreeNode intialState, String grid, String[] goalState, int threshold,
+			MissionImpossible m) {
+		System.out.println(threshold + "threshold in DFS");
 		ArrayList<String[]> ancestors = new ArrayList<String[]>();
 		String output = "";
+		int counter = 0;
+		Stack<SearchTreeNode> searchTreeNodesStack = new Stack<SearchTreeNode>();
 		if (intialState == null) {
 			return output;
 		}
-		int counter = 0;
-		searchTreeNodesQueue.add(intialState);
+		searchTreeNodesStack.push(intialState);
 		while (true) {
-			searchTreeNodesStack.peek().getState()[4] = "0,0";
-			ancestors.add(searchTreeNodesStack.peek().getState());
-			if (searchTreeNodesStack.peek().getOperator() != null) {
-				output += searchTreeNodesStack.peek().getOperator();
-			}
-			for (int k = 0; k < searchTreeNodesStack.peek().getState().length; k++) {
-				System.out.print(searchTreeNodesStack.peek().getState()[k] + ",");
-			}
-			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid, 0);
-			for (int i = 0; i < x.size(); i++) {
-				System.out.println(x.get(i).getOperator() + "operator");
-				System.out.println(x.get(i).getState()[0] + "," + x.get(i).getState()[1]);
-				searchTreeNodesQueue.add(x.get(i));
-				ancestors.add(x.get(i).getState());
-//				ancestors.add(x.get(i).getState());
-			}
-			System.out.println(searchTreeNodesQueue.peek().getState()[0] + ","
-					+ searchTreeNodesQueue.peek().getState()[1] + "pos");
-			for (int j = 0; j < searchTreeNodesQueue.peek().getState().length; j++) {
-				System.out.println(searchTreeNodesQueue.peek().getState()[j] + "state");
-			}
-//			for (int j = 0; j < ancestors.size(); j++) {
-//				SearchTreeNode y = searchTreeNodesQueue.peek();
-//				for (int i = 0; i < y.getState().length; i++) {
-//					if
-//					System.out.println("found");
-//				}
-//
+//			if(counter > 100) {
+//				return output;
 //			}
-			for (int i = 0; i < searchTreeNodesQueue.size(); i++) {
-				SearchTreeNode y = searchTreeNodesQueue.peek();
+			counter++;
+			System.out.println(counter);
+			if (threshold != -1 && threshold <= searchTreeNodesStack.peek().getDepth() && searchTreeNodesStack.peek().getDepth() != 0) {
+//				return "No solution";
+				break;
+			}
+//			searchTreeNodesStack.peek().getState()[4] = "0,0";
+//			searchTreeNodesStack.peek().getState()[4] = "0,0";
+			ancestors.add(searchTreeNodesStack.peek().getState());
+			ArrayList<SearchTreeNode> x = m.stateTransition(searchTreeNodesStack.pop(), grid, 0);
+			for (int i = 0; i < x.size(); i++) {
+				searchTreeNodesStack.push(x.get(i));
+			}
+			boolean goalFound = false;
+			for (int i = 0; i < searchTreeNodesStack.size(); i++) {
+				SearchTreeNode y = searchTreeNodesStack.peek();
 				System.out.println();
 				boolean found = false;
-				System.out.println(ancestors.size() + "ancestors size");
 				for (int j = 0; j < ancestors.size(); j++) {
-					if (Arrays.equals(y.getState(), ancestors.get(j))) {
+					if (y.getState()[0].equals(ancestors.get(j)[0]) && y.getState()[1].equals(ancestors.get(j)[1])
+							&& y.getState()[2].equals(ancestors.get(j)[2])
+							&& y.getState()[3].equals(ancestors.get(j)[3])) {
 						found = true;
-						System.out.println(found);
 						break;
 					}
 				}
 				if (found) {
 					searchTreeNodesStack.pop();
 				} else {
-					if (Arrays.equals(y.getState(), goalState)) {
-						output += y.getOperator();
-						return output;
+					if (y.getState()[0].equals(goalState[0]) && y.getState()[1].equals(goalState[1])
+							&& y.getState()[2].equals(goalState[2]) && y.getState()[3].equals(goalState[3])) {
+						goalFound = true;
+						break;
 					} else {
 						break;
 					}
 				}
 			}
+			if(goalFound) {
+				break;
+			}
 		}
+		SearchTreeNode current= searchTreeNodesStack.peek();
+		while(current.getParentNode() != null) {
+			output = current.getOperator() + "," + output;
+			current = current.getParentNode();
+		}
+		output = output.substring(0, output.length() -1);
+		return output;
 	}
 
 	public static String Greedy1(SearchTreeNode initialState, String grid, String[] goal) {
@@ -273,7 +274,8 @@ public abstract class SearchProblem {
 			current = current.getParentNode();
 			
 		}
-		return output+exploredNodes;
+		output = output.substring(0, output.length() -1);
+		return output;
 	}
 			
 
