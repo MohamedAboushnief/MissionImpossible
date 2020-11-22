@@ -373,7 +373,6 @@ public class MissionImpossible extends SearchProblem {
 
 	public static boolean isDown(String maxGrid, String ethanPos) {
 		if (ethanPos.equals(maxGrid)) {
-
 			return true;
 		}
 		return false;
