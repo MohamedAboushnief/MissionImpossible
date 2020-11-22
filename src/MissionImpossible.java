@@ -82,20 +82,20 @@ public class MissionImpossible extends SearchProblem {
 						+ Math.abs((Integer.parseInt(conState.getState()[1])
 								- Integer.parseInt(imfMembers.get(i).split(",")[1])));
 			}
-			heurNumber += imfMembers.size(); // Adding the number of remaining IMF members
+
 		}
 
 		heurNumber += Math.abs((Integer.parseInt(conState.getState()[0]) - Integer.parseInt(submarine.split(",")[0])))
-				+ Math.abs((Integer.parseInt(conState.getState()[1]) - Integer.parseInt(submarine.split(",")[1])))
-				+ Integer.parseInt(conState.getState()[3]); // Adding the number of carry to not reach heuristic = zero
-															// before the goal
+				+ Math.abs((Integer.parseInt(conState.getState()[1]) - Integer.parseInt(submarine.split(",")[1])));
+
 		// Adding at the end the distance to the submarine and adding number of carry
 		// The best case is that the number of IMF members and the distance to the
 		// submarine is zero
+		
+		if (heurNumber == 0) {  // to let the goal state only have the zero heuristic value 
+			heurNumber += 1;
+		}
 
-//		if (operator != null && operator.equals("Carry")) { // We can add this to make CARRY node have less heuristic (needs discussion)
-//			heurNumber -= 1;
-//		}
 		return heurNumber;
 	}
 
@@ -107,7 +107,7 @@ public class MissionImpossible extends SearchProblem {
 		// SUM | ethX - imfX | + | ethY - imfY | where imf member has the least health
 		int heurNumber = 0;
 		int index = 0;
-		if (!imfMembers.get(0).equals("") && !healthsOfImfMembers[0].equals("")) {
+		if (!imfMembers.get(0).equals("") && !healthsOfImfMembers[0].equals("")) { // getting the minimum imf health 
 			int minhealth = Integer.parseInt(healthsOfImfMembers[0]);
 			for (int i = 0; i < healthsOfImfMembers.length; i++) {
 				if (minhealth > Integer.parseInt(healthsOfImfMembers[i])) {
@@ -119,16 +119,12 @@ public class MissionImpossible extends SearchProblem {
 					(Integer.parseInt(conState.getState()[0]) - Integer.parseInt(imfMembers.get(index).split(",")[0])))
 					+ Math.abs((Integer.parseInt(conState.getState()[1])
 							- Integer.parseInt(imfMembers.get(index).split(",")[1])));
-					
-		}
-		
-//		heurNumber += imfMembers.size() + Integer.parseInt(conState.getState()[3]);
 
-//		if (operator != null && operator.equals("Carry")) { // We can add this to make CARRY node have less heuristic (needs discussion)
-//		heurNumber -= 1;
-//	}
-//		System.out.println(heurNumber + " for ==== > " + conState.getOperator() + " " + conState.getState()[0] + " "
-//				+ conState.getState()[1] + " " + imfMembers.get(index).split(",")[0] + " " + imfMembers.get(index).split(",")[1]);
+		}
+		if (heurNumber == 0) { // to let the goal state only have the zero heuristic value
+			heurNumber += 1;
+		}
+
 		return heurNumber;
 	}
 
@@ -312,11 +308,13 @@ public class MissionImpossible extends SearchProblem {
 				memberExist = true;
 				for (int k = 0; k < newHealth.split(",").length; k++) {
 					if (j != k) {
-						if (k == newHealth.split(",").length - 1 || afterCarryHealth.equals("")) {
+						if (afterCarryHealth.length() == 0) {
 							afterCarryHealth += newHealth.split(",")[k];
-						} else {
+						}
 
-							afterCarryHealth += newHealth.split(",")[k] + ",";
+						else {
+
+							afterCarryHealth += "," + newHealth.split(",")[k];
 						}
 					}
 				}
@@ -382,14 +380,14 @@ public class MissionImpossible extends SearchProblem {
 	}
 
 	public static boolean isTop(String ethanPos) {
-		if (ethanPos.charAt(0) == '0') {
+		if (ethanPos.equals("0")) {
 			return true;
 		}
 		return false;
 	}
 
 	public static boolean isDown(String maxGrid, String ethanPos) {
-		if (ethanPos.charAt(0) == maxGrid.charAt(0)) {
+		if (ethanPos.equals(maxGrid)) {
 
 			return true;
 		}
@@ -397,14 +395,14 @@ public class MissionImpossible extends SearchProblem {
 	}
 
 	public static boolean isLeft(String ethanPos) {
-		if (ethanPos.charAt(0) == '0') {
+		if (ethanPos.equals("0")) {
 			return true;
 		}
 		return false;
 	}
 
 	public static boolean isRight(String maxGrid, String ethanPos) {
-		if (ethanPos.charAt(0) == maxGrid.charAt(0)) {
+		if (ethanPos.equals(maxGrid)) {
 			return true;
 		}
 		return false;
