@@ -72,53 +72,82 @@ public class MissionImpossible extends SearchProblem {
 	public static int GetCost(SearchTreeNode currentNode, String Health) {
 
 		if (!Health.equals("")) {
-		
-		// calculate sum of new health
-		
-		int death = 0;
-		int totalHealth=0;
-		String[] healthOfMembersNew = Health.split(",");
-		for (String memberHealth : healthOfMembersNew) {
-			int s = Integer.parseInt(memberHealth);
-			if (s == 0) {
-				death++;
+
+			// calculate sum of new health
+			int death = 0;
+			int totalHealth = 0;
+			String[] healthOfMembersNew = Health.split(",");
+			for (String memberHealth : healthOfMembersNew) {
+				int s = Integer.parseInt(memberHealth);
+				if (s == 0) {
+					death++;
+				}
+				totalHealth++;
 			}
-			totalHealth++;
-		}
-		
-		int ethx=Integer.parseInt(currentNode.getState()[0]);
-		int ethy=Integer.parseInt(currentNode.getState()[1]);
-		
-		String[] MembersLocations = currentNode.getState()[5].split("(?<!\\G\\d+),");
-		int sumOfdistance=0;
-//		for(int i=0;i< MembersLocations.length;i++) {
-//			sumOfdistance= sumOfdistance+ (Math.abs((ethx-Integer.parseInt(MembersLocations[i].split(",")[0])))+ Math.abs((ethy-Integer.parseInt(MembersLocations[i].split(",")[1]))));
-//			
-//		}
-		
-		
-		
-		
-//		int parentNodesCost = getParentsCost(currentNode);
-		
-		
-//		int cost = healthOfMembersNew.length*2 + ((death) * 10000)+ sumOfdistance*totalHealth ;
-		int cost = healthOfMembersNew.length*2 + ((death) * 100000) ;
-		
-		return cost;
+
+			int cost = healthOfMembersNew.length * 2 + ((death) * 100000);
+
+			return cost;
 		}
 		return 0;
 	}
 
-	public static int getParentsCost(SearchTreeNode Node) {
-		int cost = 0;
+	public static int heuristicFunction(SearchTreeNode conState, List<String> imfMembers, String submarine,
+			String operator) { // first heuristic returns the cheapest path to all IMF members remaining and
+								// the cheapest path to the submarine
+		int heurNumber = 0;
+		if (!imfMembers.get(0).equals("")) {
+			for (int i = 0; i < imfMembers.size(); i++) {
+				// SUM | ethX - imfX | + | ethY - imfY |
+				heurNumber += Math.abs(
+						(Integer.parseInt(conState.getState()[0]) - Integer.parseInt(imfMembers.get(i).split(",")[0])))
+						+ Math.abs((Integer.parseInt(conState.getState()[1])
+								- Integer.parseInt(imfMembers.get(i).split(",")[1])));
+			}
 
-		if (Node.getCostToRoot() == 0) {
-			return 0;
-		} else {
-			return getParentsCost(Node.getParentNode()) + Node.getCostToRoot();
 		}
 
+		heurNumber += Math.abs((Integer.parseInt(conState.getState()[0]) - Integer.parseInt(submarine.split(",")[0])))
+				+ Math.abs((Integer.parseInt(conState.getState()[1]) - Integer.parseInt(submarine.split(",")[1])));
+
+		// Adding at the end the distance to the submarine and adding number of carry
+		// The best case is that the number of IMF members and the distance to the
+		// submarine is zero
+
+		if (heurNumber == 0) { // to let the goal state only have the zero heuristic value
+			heurNumber += 1;
+		}
+
+		return heurNumber;
+	}
+
+	public static int heuristicFunction_2(SearchTreeNode conState, List<String> imfMembers,
+			String[] healthsOfImfMembers, String operator) { // second heuristic returns the cheapest path the IMF
+																// member with the
+		// least health
+
+		// SUM | ethX - imfX | + | ethY - imfY | where imf member has the least health
+		int heurNumber = 0;
+		int index = 0;
+		if (!imfMembers.get(0).equals("") && !healthsOfImfMembers[0].equals("")) { // getting the minimum imf health
+			int minhealth = Integer.parseInt(healthsOfImfMembers[0]);
+			for (int i = 0; i < healthsOfImfMembers.length; i++) {
+				if (minhealth > Integer.parseInt(healthsOfImfMembers[i])) {
+					minhealth = Integer.parseInt(healthsOfImfMembers[i]);
+					index = i;
+				}
+			}
+			heurNumber = Math.abs(
+					(Integer.parseInt(conState.getState()[0]) - Integer.parseInt(imfMembers.get(index).split(",")[0])))
+					+ Math.abs((Integer.parseInt(conState.getState()[1])
+							- Integer.parseInt(imfMembers.get(index).split(",")[1])));
+
+		}
+		if (heurNumber == 0) { // to let the goal state only have the zero heuristic value
+			heurNumber += 1;
+		}
+
+		return heurNumber;
 	}
 
 	public static ArrayList<SearchTreeNode> stateTransition(SearchTreeNode state, String grid) {
@@ -133,11 +162,9 @@ public class MissionImpossible extends SearchProblem {
 
 		int parentDepth = state.getDepth();
 		int costToRoot = state.getCostToRoot();
-//		String Health = state.getState()[4];
 
 		String imfMembersLocations = state.getState()[5];
-//		List<String> imfMembers  = Arrays.asList(imfMembersLocations.split("(?<!\\G\\d+),"));
-//		List<String> imfMembers  = Arrays.asList("");
+
 		List<String> imfMembers = new ArrayList<String>();
 
 		if (imfMembersLocations.length() > 0) {
@@ -148,10 +175,6 @@ public class MissionImpossible extends SearchProblem {
 		}
 
 		String newHealth = "";
-		
-		
-	
-		
 
 		if (!state.getState()[4].equals("")) {
 			for (int i = 0; i < state.getState()[4].split(",").length; i++) {
@@ -255,11 +278,13 @@ public class MissionImpossible extends SearchProblem {
 				memberExist = true;
 				for (int k = 0; k < newHealth.split(",").length; k++) {
 					if (j != k) {
-						if (k == newHealth.split(",").length - 1 || afterCarryHealth.equals("")) {
-							afterCarryHealth += newHealth.split(",")[k]+ ",";
-						} else {
+						if (afterCarryHealth.length() == 0) {
+							afterCarryHealth += newHealth.split(",")[k];
+						}
 
-							afterCarryHealth += newHealth.split(",")[k] + ",";
+						else {
+
+							afterCarryHealth += "," + newHealth.split(",")[k];
 						}
 					}
 				}
@@ -289,7 +314,6 @@ public class MissionImpossible extends SearchProblem {
 			newState[3] = newNoOfCarry + "";
 			newState[4] = afterCarryHealth;
 			newState[5] = outputMembers;
-//			System.out.println(outputMembers + "remaining membersss cuz same position");
 			List<String> carryIMFMembers = Arrays.asList(outputMembers.split("(?<!\\G\\d+),"));
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
 			SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, newCostToRoot, 0);
