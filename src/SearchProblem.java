@@ -39,7 +39,7 @@ public abstract class SearchProblem {
 			for (int k = 0; k < searchTreeNodesStack.peek().getState().length; k++) {
 				System.out.print(searchTreeNodesStack.peek().getState()[k] + ",");
 			}
-			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid);
+			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid, 0);
 			for (int i = 0; i < x.size(); i++) {
 				System.out.println(x.get(i).getOperator() + "operator");
 				searchTreeNodesStack.push(x.get(i));
@@ -88,7 +88,7 @@ public abstract class SearchProblem {
 					+ currentState.getState()[2] + "," + currentState.getState()[3] + "," + currentState.getState()[4];
 			prevStates.add(newState);
 			System.out.println("current state  " + newState);
-			ArrayList<SearchTreeNode> stateSpace = MissionImpossible.stateTransition(currentState, grid);
+			ArrayList<SearchTreeNode> stateSpace = MissionImpossible.stateTransition(currentState, grid, 0);
 			for (int i = 0; i < stateSpace.size(); i++) {
 				System.out.println(stateSpace.get(i).getOperator() + "  operator");
 			}
@@ -174,7 +174,7 @@ public abstract class SearchProblem {
 			for (int k = 0; k < searchTreeNodesStack.peek().getState().length; k++) {
 				System.out.print(searchTreeNodesStack.peek().getState()[k] + ",");
 			}
-			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.remove(), grid);
+			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.remove(), grid, 0);
 			for (int i = 0; i < x.size(); i++) {
 				System.out.println(x.get(i).getOperator() + "  operator");
 				searchTreeNodesStack.add(x.get(i));
@@ -235,8 +235,8 @@ public abstract class SearchProblem {
 			if (takeLessHeuristic.size() > 0) {
 				ancestors.add(takeLessHeuristic.peek());
 				ArrayList<SearchTreeNode> expandedNodes = MissionImpossible.stateTransition(takeLessHeuristic.remove(),
-						grid);
-				numberOfNodesExpanded ++;
+						grid, 1);
+				numberOfNodesExpanded++;
 				for (int i = 0; i < expandedNodes.size(); i++) {
 					tempArray.add(expandedNodes.get(i));
 				}
@@ -318,8 +318,8 @@ public abstract class SearchProblem {
 			if (takeLessHeuristic.size() > 0) {
 				ancestors.add(takeLessHeuristic.peek());
 				ArrayList<SearchTreeNode> expandedNodes = MissionImpossible.stateTransition(takeLessHeuristic.remove(),
-						grid);
-				numberOfNodesExpanded ++;
+						grid, 2);
+				numberOfNodesExpanded++;
 				for (int i = 0; i < expandedNodes.size(); i++) {
 					tempArray.add(expandedNodes.get(i));
 
@@ -367,7 +367,7 @@ public abstract class SearchProblem {
 						if (parentOp.getOperator() == null) {
 							break;
 						} else {
-							output = parentOp.getOperator() + ","  + output;
+							output = parentOp.getOperator() + "," + output;
 							checkNode = parentOp;
 						}
 					}
@@ -408,8 +408,8 @@ public abstract class SearchProblem {
 		int membersNum = members.length;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
 		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0);
-		System.out.print(Greedy1(init, grid, goal));
-		//System.out.print(Greedy2(init, grid, goal));
+		//System.out.print(Greedy1(init, grid, goal));
+		System.out.print(Greedy2(init, grid, goal));
 
 	}
 
