@@ -30,7 +30,7 @@ public abstract class SearchProblem {
 			if (searchTreeNodesQueue.peek().getOperator() != null) {
 				output += searchTreeNodesQueue.peek().getOperator();
 			}
-			ArrayList<SearchTreeNode> x = m.stateTransition(searchTreeNodesQueue.remove(), grid);
+			ArrayList<SearchTreeNode> x = m.stateTransition(searchTreeNodesQueue.remove(), grid, 0);
 			for (int i = 0; i < x.size(); i++) {
 				System.out.println(x.get(i).getOperator() + "operator");
 				System.out.println(x.get(i).getState()[0] + "," + x.get(i).getState()[1]);
@@ -85,32 +85,38 @@ public abstract class SearchProblem {
 		System.out.println(threshold + "threshold in DFS");
 		ArrayList<String[]> ancestors = new ArrayList<String[]>();
 		String output = "";
+		int counter = 0;
 		Stack<SearchTreeNode> searchTreeNodesStack = new Stack<SearchTreeNode>();
 		if (intialState == null) {
 			return output;
 		}
 		searchTreeNodesStack.push(intialState);
 		while (true) {
-			System.out.println(searchTreeNodesStack.peek().getDepth() + " Depth");
+//			if(counter > 100) {
+//				return output;
+//			}
+			counter++;
+			System.out.println(counter);
 			if (threshold <= searchTreeNodesStack.peek().getDepth() && searchTreeNodesStack.peek().getDepth() != 0) {
 //				return "No solution";
-				return output;
+				break;
 			}
-			searchTreeNodesStack.peek().getState()[4] = "0,0";
+//			searchTreeNodesStack.peek().getState()[4] = "0,0";
+//			searchTreeNodesStack.peek().getState()[4] = "0,0";
 			ancestors.add(searchTreeNodesStack.peek().getState());
-			if (searchTreeNodesStack.peek().getOperator() != null) {
-				output += searchTreeNodesStack.peek().getOperator();
-			}
-			ArrayList<SearchTreeNode> x = m.stateTransition(searchTreeNodesStack.pop(), grid);
+			ArrayList<SearchTreeNode> x = m.stateTransition(searchTreeNodesStack.pop(), grid, 0);
 			for (int i = 0; i < x.size(); i++) {
 				searchTreeNodesStack.push(x.get(i));
 			}
+			boolean goalFound = false;
 			for (int i = 0; i < searchTreeNodesStack.size(); i++) {
 				SearchTreeNode y = searchTreeNodesStack.peek();
 				System.out.println();
 				boolean found = false;
 				for (int j = 0; j < ancestors.size(); j++) {
-					if (Arrays.equals(y.getState(), ancestors.get(j))) {
+					if (y.getState()[0].equals(ancestors.get(j)[0]) && y.getState()[1].equals(ancestors.get(j)[1])
+							&& y.getState()[2].equals(ancestors.get(j)[2])
+							&& y.getState()[3].equals(ancestors.get(j)[3])) {
 						found = true;
 						break;
 					}
@@ -118,15 +124,26 @@ public abstract class SearchProblem {
 				if (found) {
 					searchTreeNodesStack.pop();
 				} else {
-					if (Arrays.equals(y.getState(), goalState)) {
-						output += y.getOperator();
-						return output;
+					if (y.getState()[0].equals(goalState[0]) && y.getState()[1].equals(goalState[1])
+							&& y.getState()[2].equals(goalState[2]) && y.getState()[3].equals(goalState[3])) {
+						goalFound = true;
+						break;
 					} else {
 						break;
 					}
 				}
 			}
+			if(goalFound) {
+				break;
+			}
 		}
+		SearchTreeNode current= searchTreeNodesStack.peek();
+		while(current.getParentNode() != null) {
+			output = current.getOperator() + "," + output;
+			current = current.getParentNode();
+		}
+		output = output.substring(0, output.length() -1);
+		return output;
 	}
 //
 //	public static String BFS(SearchTreeNode intialState, String grid, String[] goalState) {
@@ -214,6 +231,7 @@ public abstract class SearchProblem {
 			}
 		}
 		return "No solution";
+	}
 //	public static String Greedy(SearchTreeNode intialState,String grid, String[] goalState) {
 //		
 //	}
@@ -226,7 +244,8 @@ public abstract class SearchProblem {
 		List<String> imfMembers = Arrays.asList(grid.split(";")[3].split("(?<!\\G\\d+),"));
 		String output = "";
 
-		int heuristicValue = m.heuristicFunction(initialState, imfMembers, grid.split(";")[2], initialState.getOperator());
+		int heuristicValue = m.heuristicFunction(initialState, imfMembers, grid.split(";")[2],
+				initialState.getOperator());
 		initialState.setHeuristicValue(heuristicValue);
 
 		takeLessHeuristic.add(initialState);
@@ -239,7 +258,7 @@ public abstract class SearchProblem {
 				ancestors.add(takeLessHeuristic.peek());
 				System.out.println(ancestors.size() + " sizeeeeeeeeeeeeeeeee");
 				ArrayList<SearchTreeNode> expandedNodes = MissionImpossible.stateTransition(takeLessHeuristic.remove(),
-						grid);
+						grid, 0);
 
 				for (int i = 0; i < expandedNodes.size(); i++) {
 					tempArray.add(expandedNodes.get(i));
@@ -265,7 +284,7 @@ public abstract class SearchProblem {
 //			if(coun == 100) {
 //				return output;
 //			}
-			coun ++;
+			coun++;
 			boolean found = false;
 			SearchTreeNode checkNode = takeLessHeuristic.peek();
 
@@ -318,33 +337,35 @@ public abstract class SearchProblem {
 
 	}
 
+//	public static String AStar(SearchTreeNode intialState, String grid, String[] goalState, MissionImpossible m) {
+//		
+//	}
+
 	public static void main(String[] args) {
 		MissionImpossible m = new MissionImpossible();
 //		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-//		String grid = "5,5;1,0;1,4;1,2,1,3,1,1;6,7,8;3";
-		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
+		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1"; // tarteeb el imf members 3al grid check.....
+//		 String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
+//		String grid = "5,5;2,1;1,0;1,3,4,2,4,1,3,1;54,31,39,98;2";
 
 		String totalHealth = grid.split(";")[4];
 		String submarine = grid.split(";")[2];
 		String ethan = grid.split(";")[1];
 		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0" };
-//		String[] goal = {"1","4","6","0","6,16,76,66,56,46"};
-
 		String[] members = grid.split(";")[3].split("(?<!\\G\\d+),");
 		String mem = "";
-		for(int i = 0; i < members.length; i++) {
-			if(i != 0) {
+		for (int i = 0; i < members.length; i++) {
+			if (i != 0) {
 				mem += "," + members[i];
-			}
-			else {
+			} else {
 				mem += members[i];
 			}
 		}
-	
-		int membersNum = members.length; // WRONGGGG !!!!
+		System.out.println(mem + " is the members");
+		int membersNum = members.length;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
-		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0);
-		System.out.print(BFS(init, grid, goal, m));
+		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0);
+		System.out.print(DFS(init, grid, goal, 10000000, m));
 	}
 
 }
