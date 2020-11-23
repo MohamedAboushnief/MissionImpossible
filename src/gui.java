@@ -80,11 +80,11 @@ public class gui {
 			frame.getContentPane().setBackground(Color.BLACK);
 			frame.setSize(1000, 1000);
 			frame.setVisible(true);
-//			try {
-//				TimeUnit.SECONDS.sleep(1);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			if (output.split(",")[i].equals("Up")) {
 				String tmp = newGrid.split(";")[0];
 				tmp += ";";
