@@ -5,6 +5,7 @@ public class SearchTreeNode implements Comparable {
 	private String operator;
 	private int depth;
 	private int costToRoot;
+	private int AStarCost;
 	private int heuristicValue;
 	private String strategy;
 	private String health;
@@ -75,12 +76,25 @@ public class SearchTreeNode implements Comparable {
 	public void setHeuristicValue(int heuristicValue) {
 		this.heuristicValue = heuristicValue;
 	}
+	
+	public int getAStarCost() {
+		return AStarCost;
+	}
+
+	public void setAStarCost(int aStarCost) {
+		AStarCost = aStarCost;
+	}
+	
 
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub
 		if (((SearchTreeNode) o).getStrategyName().equals("UC")) {
 			return ((Integer) this.getCostToRoot()).compareTo(((SearchTreeNode) o).getCostToRoot());
-		} else {
+		}
+		else if(((SearchTreeNode) o).getStrategyName().equals("AS1") || ((SearchTreeNode) o).getStrategyName().equals("AS2")) {
+			return ((Integer) this.getAStarCost()).compareTo(((SearchTreeNode) o).getAStarCost());
+		}
+		else {
 			return ((Integer) this.getHeuristicValue()).compareTo(((SearchTreeNode) o).getHeuristicValue());
 		}
 
