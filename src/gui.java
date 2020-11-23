@@ -7,7 +7,6 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.Arrays;
 import java.util.List;
@@ -196,6 +195,12 @@ public class gui {
 			}
 		}
 
+	}
+	public static void main(String[] args) {
+		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
+		String output= "Left,Down,Carry,Left,Down,Carry,Down,Drop,Right,Right,Up,Carry,Up,Up,Up,Right,Carry,Left,Left,Left,Down,Down,Down,Down,Drop,Drop,Right,Right,Right,Carry,Up,Right,Carry,Left,Down,Left,Left,Left,Drop,Drop,Drop";
+		gui x= new gui(grid,output);
+		
 	}
 
 }

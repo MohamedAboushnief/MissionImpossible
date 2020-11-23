@@ -11,7 +11,7 @@ import java.util.Queue;
 import java.util.*;
 
 public abstract class SearchProblem {
-	
+
 	public static String DFS(SearchTreeNode intialState, String grid, String[] goalState, int threshold,
 			MissionImpossible m) {
 		ArrayList<String[]> ancestors = new ArrayList<String[]>();
@@ -56,16 +56,16 @@ public abstract class SearchProblem {
 					}
 				}
 			}
-			if(goalFound) {
+			if (goalFound) {
 				break;
 			}
 		}
-		SearchTreeNode current= searchTreeNodesStack.peek();
-		while(current.getParentNode() != null) {
+		SearchTreeNode current = searchTreeNodesStack.peek();
+		while (current.getParentNode() != null) {
 			output = current.getOperator() + "," + output;
 			current = current.getParentNode();
 		}
-		output = output.substring(0, output.length() -1);
+		output = output.substring(0, output.length() - 1);
 		return output;
 	}
 
@@ -271,7 +271,7 @@ public abstract class SearchProblem {
 			current = current.getParentNode();
 
 		}
-		output = output.substring(0, output.length() -1);
+		output = output.substring(0, output.length() - 1);
 		return output;
 	}
 
@@ -380,7 +380,7 @@ public abstract class SearchProblem {
 		String tempState = state[0] + "," + state[1] + "," + state[2] + "," + state[3];
 		return tempState;
 	}
-	
+
 	public static String ID(SearchTreeNode intialState, String grid, String[] goalState, int threshold) {
 		int thresholdCounter = 0;
 		String gridCopy = grid;
@@ -397,8 +397,6 @@ public abstract class SearchProblem {
 		}
 		return "No solution";
 	}
-	
-	
 
 //	public static String AStar(SearchTreeNode intialState, String grid, String[] goalState, MissionImpossible m) {
 //		
