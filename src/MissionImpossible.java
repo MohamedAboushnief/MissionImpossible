@@ -250,7 +250,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode up = new SearchTreeNode(newState, state, "Up", newDepth, newCostToRoot, 0,
+			SearchTreeNode up = new SearchTreeNode(newState, state, "up", newDepth, newCostToRoot, 0,
 					state.getStrategyName(), newHealth2, CarriedPositions);
 			int heuristicValue = 0;
 			if (heuristicFlag == 1) {
@@ -278,7 +278,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode left = new SearchTreeNode(newState, state, "Left", newDepth, newCostToRoot, 0,
+			SearchTreeNode left = new SearchTreeNode(newState, state, "left", newDepth, newCostToRoot, 0,
 					state.getStrategyName(), newHealth2, CarriedPositions);
 
 			int heuristicValue = 0;
@@ -306,7 +306,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode down = new SearchTreeNode(newState, state, "Down", newDepth, newCostToRoot, 0,
+			SearchTreeNode down = new SearchTreeNode(newState, state, "down", newDepth, newCostToRoot, 0,
 					state.getStrategyName(), newHealth2, CarriedPositions);
 			int heuristicValue = 0;
 			if (heuristicFlag == 1) {
@@ -333,7 +333,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode right = new SearchTreeNode(newState, state, "Right", newDepth, newCostToRoot, 0,
+			SearchTreeNode right = new SearchTreeNode(newState, state, "right", newDepth, newCostToRoot, 0,
 					state.getStrategyName(), newHealth2, CarriedPositions);
 			int heuristicValue = 0;
 			if (heuristicFlag == 1) {
@@ -418,7 +418,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[5] = outputMembers;
 			List<String> carryIMFMembers = Arrays.asList(outputMembers.split("(?<!\\G\\d+),"));
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode carry = new SearchTreeNode(newState, state, "Carry", newDepth, newCostToRoot, 0,
+			SearchTreeNode carry = new SearchTreeNode(newState, state, "carry", newDepth, newCostToRoot, 0,
 					state.getStrategyName(), newHealth2, newCarriedString);
 			int heuristicValue = 0;
 			if (heuristicFlag == 1) {
@@ -447,7 +447,7 @@ public class MissionImpossible extends SearchProblem {
 			newState[4] = newHealth;
 			newState[5] = imfMembersLocations;
 			int newCostToRoot = GetCost(state, newHealth) + costToRoot;
-			SearchTreeNode drop = new SearchTreeNode(newState, state, "Drop", newDepth, newCostToRoot, 0,
+			SearchTreeNode drop = new SearchTreeNode(newState, state, "drop", newDepth, newCostToRoot, 0,
 					state.getStrategyName(), newHealth2, CarriedPositions);
 			int heuristicValue = 0;
 			if (heuristicFlag == 1) {
@@ -554,9 +554,8 @@ public class MissionImpossible extends SearchProblem {
 	public static void main(String[] args) {
 
 		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
-		System.out.println(solve(grid, "UC", false));
+		System.out.println(solve(grid, "GR1", true));
 		
-		//System.out.println(test);
 
 	}
 }

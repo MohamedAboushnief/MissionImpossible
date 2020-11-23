@@ -146,8 +146,7 @@ public abstract class SearchProblem {
 						}
 					}
 					takeLessHeuristic.peek().setHeuristicValue(0);
-					System.out.println("Goal Reached " + "and the goal heuristic value is = "
-							+ takeLessHeuristic.peek().getHeuristicValue());
+				
 					int noOfdeaths = getNoOfdeaths(takeLessHeuristic.peek());
 					output += lastOp + ";" + noOfdeaths + ";" + takeLessHeuristic.peek().getHealth() + ";"
 							+ numberOfNodesExpanded;
@@ -232,8 +231,7 @@ public abstract class SearchProblem {
 						}
 					}
 					takeLessHeuristic.peek().setHeuristicValue(0);
-					System.out.println("Goal Reached " + "and the goal heuristic value is = "
-							+ takeLessHeuristic.peek().getHeuristicValue());
+					
 
 					int noOfdeaths = getNoOfdeaths(takeLessHeuristic.peek());
 					output += lastOp + ";" + noOfdeaths + ";" + takeLessHeuristic.peek().getHealth() + ";"
@@ -352,7 +350,6 @@ public abstract class SearchProblem {
 
 			// check if current node is the goal state
 			if (CheckGoal(currentNode, goalState)) {
-				System.out.println("Reached Goal State !!!!!!!!");
 				String path = getPath(currentNode);
 
 				int noOfdeaths = getNoOfdeaths(currentNode);
@@ -401,7 +398,6 @@ public abstract class SearchProblem {
 			if (!DFSReturn.equals("No solution")) {
 				return DFSReturn;
 			} else {
-				System.out.println(thresholdCounter + "counter");
 				thresholdCounter++;
 			}
 		}
@@ -435,7 +431,6 @@ public abstract class SearchProblem {
 
 			// check if current node is the goal state
 			if (CheckGoal(currentNode, goalState)) {
-				System.out.println("Reached Goal State !!!!!!!!");
 				String path = getPath(currentNode);
 
 				int noOfdeaths = getNoOfdeaths(currentNode);
@@ -490,7 +485,6 @@ public abstract class SearchProblem {
 
 			// check if current node is the goal state
 			if (CheckGoal(currentNode, goalState)) {
-				System.out.println("Reached Goal State !!!!!!!!");
 				String path = getPath(currentNode);
 
 				int noOfdeaths = getNoOfdeaths(currentNode);

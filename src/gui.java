@@ -1,31 +1,21 @@
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.io.File;
-import java.io.IOException;
+
 import java.util.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-
-import com.sun.media.sound.Toolkit;
-import com.sun.tools.javac.launcher.Main;
-
-import jdk.internal.platform.Container;
+import java.net.URL;
 
 public class gui {
 
@@ -48,7 +38,7 @@ public class gui {
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
 		for (int i = 0; i < numberInX; i++) {
 			for (int j = 0; j < numberInY; j++) {
-				 Border blackBorder = BorderFactory.createLineBorder(Color.black);
+				Border blackBorder = BorderFactory.createLineBorder(Color.black);
 				label = new JLabel();
 				panel.add(label);
 				label.setOpaque(true);
@@ -72,6 +62,18 @@ public class gui {
 	}
 
 	public void layout(String grid, String output) {
+
+		try {
+			URL url = this.getClass().getResource("alo_eh.wav");
+			Clip clip = AudioSystem.getClip();
+			// getAudioInputStream() also accepts a File or InputStream
+			AudioInputStream ais = AudioSystem.getAudioInputStream(url);
+			clip.open(ais);
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		JFrame frame = new JFrame("Grid Layout");
 		String newGrid = grid;
 		for (int i = 0; i < output.split(",").length; i++) {
@@ -81,11 +83,11 @@ public class gui {
 			frame.setSize(1000, 1000);
 			frame.setVisible(true);
 			try {
-				TimeUnit.SECONDS.sleep(1);
+				TimeUnit.MILLISECONDS.sleep(300);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if (output.split(",")[i].equals("Up")) {
+			if (output.split(",")[i].equals("up")) {
 				String tmp = newGrid.split(";")[0];
 				tmp += ";";
 				tmp += (Integer.parseInt(newGrid.split(";")[1].split(",")[0]) - 1) + "";
@@ -105,7 +107,7 @@ public class gui {
 				}
 				newGrid = tmp;
 			}
-			if (output.split(",")[i].equals("Down")) {
+			if (output.split(",")[i].equals("down")) {
 				String tmp = newGrid.split(";")[0];
 				tmp += ";";
 				tmp += (Integer.parseInt(newGrid.split(";")[1].split(",")[0]) + 1) + "";
@@ -125,7 +127,7 @@ public class gui {
 				}
 				newGrid = tmp;
 			}
-			if (output.split(",")[i].equals("Right")) {
+			if (output.split(",")[i].equals("right")) {
 				String tmp = newGrid.split(";")[0];
 				tmp += ";";
 				tmp += newGrid.split(";")[1].split(",")[0];
@@ -145,7 +147,7 @@ public class gui {
 				}
 				newGrid = tmp;
 			}
-			if (output.split(",")[i].equals("Left")) {
+			if (output.split(",")[i].equals("left")) {
 				String tmp = newGrid.split(";")[0];
 				tmp += ";";
 				tmp += newGrid.split(";")[1].split(",")[0];
@@ -165,7 +167,7 @@ public class gui {
 				}
 				newGrid = tmp;
 			}
-			if (output.split(",")[i].equals("Carry")) {
+			if (output.split(",")[i].equals("carry")) {
 				String tmp = newGrid.split(";")[0];
 				tmp += ";";
 				tmp += newGrid.split(";")[1].split(",")[0];
@@ -195,12 +197,6 @@ public class gui {
 			}
 		}
 
-	}
-	public static void main(String[] args) {
-		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-		String output= "Left,Down,Carry,Left,Down,Carry,Down,Drop,Right,Right,Up,Carry,Up,Up,Up,Right,Carry,Left,Left,Left,Down,Down,Down,Down,Drop,Drop,Right,Right,Right,Carry,Up,Right,Carry,Left,Down,Left,Left,Left,Drop,Drop,Drop";
-		gui x= new gui(grid,output);
-		
 	}
 
 }
