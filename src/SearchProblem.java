@@ -14,7 +14,6 @@ public abstract class SearchProblem {
 	
 	public static String DFS(SearchTreeNode intialState, String grid, String[] goalState, int threshold,
 			MissionImpossible m) {
-		System.out.println(threshold + "threshold in DFS");
 		ArrayList<String[]> ancestors = new ArrayList<String[]>();
 		String output = "";
 		int counter = 0;
@@ -24,17 +23,10 @@ public abstract class SearchProblem {
 		}
 		searchTreeNodesStack.push(intialState);
 		while (true) {
-//			if(counter > 100) {
-//				return output;
-//			}
 			counter++;
-			System.out.println(counter);
 			if (threshold <= searchTreeNodesStack.peek().getDepth() && searchTreeNodesStack.peek().getDepth() != 0) {
 				return "No solution";
-//				break;
 			}
-//			searchTreeNodesStack.peek().getState()[4] = "0,0";
-//			searchTreeNodesStack.peek().getState()[4] = "0,0";
 			ancestors.add(searchTreeNodesStack.peek().getState());
 			ArrayList<SearchTreeNode> x = m.stateTransition(searchTreeNodesStack.pop(), grid, 0);
 			for (int i = 0; i < x.size(); i++) {
@@ -43,7 +35,6 @@ public abstract class SearchProblem {
 			boolean goalFound = false;
 			for (int i = 0; i < searchTreeNodesStack.size(); i++) {
 				SearchTreeNode y = searchTreeNodesStack.peek();
-				System.out.println();
 				boolean found = false;
 				for (int j = 0; j < ancestors.size(); j++) {
 					if (y.getState()[0].equals(ancestors.get(j)[0]) && y.getState()[1].equals(ancestors.get(j)[1])
