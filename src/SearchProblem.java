@@ -61,12 +61,17 @@ public abstract class SearchProblem {
 			}
 		}
 		SearchTreeNode current = searchTreeNodesStack.peek();
+		int noOfdeaths = getNoOfdeaths(current);
+		String health = current.getHealth();
+
 		while (current.getParentNode() != null) {
 			output = current.getOperator() + "," + output;
 			current = current.getParentNode();
 		}
 		output = output.substring(0, output.length() - 1);
-		return output;
+
+		return output + ";" + noOfdeaths + ";" + health + ";" + counter;
+
 	}
 
 	public static String Greedy1(SearchTreeNode initialState, String grid, String[] goal) {
@@ -266,13 +271,18 @@ public abstract class SearchProblem {
 				}
 			}
 		}
+
+		int noOfdeaths = getNoOfdeaths(current);
+		String healthString = current.getHealth();
 		while (current.getParentNode() != null) {
 			output = current.getOperator() + "," + output;
 			current = current.getParentNode();
 
 		}
 		output = output.substring(0, output.length() - 1);
-		return output;
+
+		return output + ";" + noOfdeaths + ";" + healthString + ";" + exploredNodes;
+
 	}
 
 	public static boolean CheckGoal(SearchTreeNode currentNode, String[] goalState) {
@@ -398,39 +408,147 @@ public abstract class SearchProblem {
 		return "No solution";
 	}
 
-//	public static String AStar(SearchTreeNode intialState, String grid, String[] goalState, MissionImpossible m) {
-//		
-//	}
+	public static String AS1(SearchTreeNode intialState, String grid, String[] goalState) {
+		String output = "";
+		Hashtable<String, Integer> ancestors = new Hashtable<String, Integer>();
+		PriorityQueue<SearchTreeNode> searchTreeNodesStack = new PriorityQueue<SearchTreeNode>();
 
-	public static void main(String[] args) {
-		MissionImpossible m = new MissionImpossible();
-//		String grid = "15,15;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
-//		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
+		if (intialState == null) {
+			return output;
 
-		String totalHealth = grid.split(";")[4];
-		String submarine = grid.split(";")[2];
-		String ethan = grid.split(";")[1];
-		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0" };
-//		String[] goal = {"1","4","6","0","6,16,76,66,56,46"};
-		String CarriedPositions = "";
-		String[] members = grid.split(";")[3].split("(?<!\\G\\d+),");
-		String mem = "";
-		for (int i = 0; i < members.length; i++) {
-			if (i != 0) {
-				mem += "," + members[i];
-			} else {
-				mem += members[i];
-			}
-			CarriedPositions += "0";
 		}
 
-		int membersNum = members.length;
-		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
-		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "GR2", totalHealth, CarriedPositions);
-		// System.out.print(Greedy1(init, grid, goal));
-		System.out.print(Greedy2(init, grid, goal));
+		// add initial state in the stack
+		searchTreeNodesStack.add(intialState);
+		int noOfExpansions = 0;
+		while (true) {
+
+			// get the first element
+			SearchTreeNode currentNode = searchTreeNodesStack.peek();
+
+			// add the first element in the ancestors hashtable
+			ancestors.put(stateToString(currentNode), 0);
+
+			if (currentNode.getOperator() != null) {
+				output += currentNode.getOperator();
+			}
+
+			// check if current node is the goal state
+			if (CheckGoal(currentNode, goalState)) {
+				System.out.println("Reached Goal State !!!!!!!!");
+				String path = getPath(currentNode);
+
+				int noOfdeaths = getNoOfdeaths(currentNode);
+
+				return path + currentNode.getOperator() + ";" + noOfdeaths + ";" + currentNode.getHealth() + ";"
+						+ noOfExpansions;
+			}
+
+			// expand current node
+			ArrayList<SearchTreeNode> stateSpaces = MissionImpossible.stateTransition(searchTreeNodesStack.remove(),
+					grid, 1);
+			noOfExpansions++;
+
+			for (int i = 0; i < stateSpaces.size(); i++) {
+				// check for repeated states
+				if (!ancestors.containsKey(stateToString(stateSpaces.get(i)))) {
+					searchTreeNodesStack.add(stateSpaces.get(i));
+					ancestors.put(stateToString(stateSpaces.get(i)), 0);
+
+				}
+
+			}
+
+		}
 
 	}
 
+	public static String AS2(SearchTreeNode intialState, String grid, String[] goalState) {
+		String output = "";
+		Hashtable<String, Integer> ancestors = new Hashtable<String, Integer>();
+		PriorityQueue<SearchTreeNode> searchTreeNodesStack = new PriorityQueue<SearchTreeNode>();
+
+		if (intialState == null) {
+			return output;
+
+		}
+
+		// add initial state in the stack
+		searchTreeNodesStack.add(intialState);
+		int noOfExpansions = 0;
+		while (true) {
+
+			// get the first element
+			SearchTreeNode currentNode = searchTreeNodesStack.peek();
+
+			// add the first element in the ancestors hashtable
+			ancestors.put(stateToString(currentNode), 0);
+
+			if (currentNode.getOperator() != null) {
+				output += currentNode.getOperator();
+			}
+
+			// check if current node is the goal state
+			if (CheckGoal(currentNode, goalState)) {
+				System.out.println("Reached Goal State !!!!!!!!");
+				String path = getPath(currentNode);
+
+				int noOfdeaths = getNoOfdeaths(currentNode);
+
+				return path + currentNode.getOperator() + ";" + noOfdeaths + ";" + currentNode.getHealth() + ";"
+						+ noOfExpansions;
+			}
+
+			// expand current node
+			ArrayList<SearchTreeNode> stateSpaces = MissionImpossible.stateTransition(searchTreeNodesStack.remove(),
+					grid, 2);
+			noOfExpansions++;
+
+			for (int i = 0; i < stateSpaces.size(); i++) {
+				// check for repeated states
+				if (!ancestors.containsKey(stateToString(stateSpaces.get(i)))) {
+					searchTreeNodesStack.add(stateSpaces.get(i));
+					ancestors.put(stateToString(stateSpaces.get(i)), 0);
+
+				}
+
+			}
+
+		}
+	}
 }
+//	public static void main(String[] args) {
+//		MissionImpossible m = new MissionImpossible();
+////		String grid = "15,15;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
+//		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
+////		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
+//
+//		String totalHealth = grid.split(";")[4];
+//		String submarine = grid.split(";")[2];
+//		String ethan = grid.split(";")[1];
+//		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0" };
+////		String[] goal = {"1","4","6","0","6,16,76,66,56,46"};
+//		String CarriedPositions = "";
+//		String[] members = grid.split(";")[3].split("(?<!\\G\\d+),");
+//		String mem = "";
+//		for (int i = 0; i < members.length; i++) {
+//			if (i != 0) {
+//				mem += "," + members[i];
+//			} else {
+//				mem += members[i];
+//			}
+//			CarriedPositions += "0";
+//		}
+//
+//		int membersNum = members.length;
+//		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
+////		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "UC", totalHealth, CarriedPositions);
+//
+//		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "AS1", totalHealth, CarriedPositions);
+//
+//		// System.out.print(Greedy1(init, grid, goal));
+//		System.out.print(AS1(init, grid, goal));
+//
+//	}
+
+

@@ -258,8 +258,10 @@ public class MissionImpossible extends SearchProblem {
 			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(up, imfMembers, newHealth.split(","), up.getOperator());
 			}
+			int AStarValue = heuristicValue + newCostToRoot;
 
 			up.setHeuristicValue(heuristicValue);
+			up.setAStarCost(AStarValue);
 			stateSpace.add(up);
 		}
 		if (!isLeft) { // Creating left state
@@ -285,7 +287,8 @@ public class MissionImpossible extends SearchProblem {
 			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(left, imfMembers, newHealth.split(","), left.getOperator());
 			}
-
+			int AStarValue = heuristicValue + newCostToRoot;
+			left.setAStarCost(AStarValue);
 			left.setHeuristicValue(heuristicValue);
 			stateSpace.add(left);
 		}
@@ -311,7 +314,8 @@ public class MissionImpossible extends SearchProblem {
 			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(down, imfMembers, newHealth.split(","), down.getOperator());
 			}
-
+			int AStarValue = heuristicValue + newCostToRoot;
+			down.setAStarCost(AStarValue);
 			down.setHeuristicValue(heuristicValue);
 			stateSpace.add(down);
 		}
@@ -337,7 +341,8 @@ public class MissionImpossible extends SearchProblem {
 			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(right, imfMembers, newHealth.split(","), right.getOperator());
 			}
-
+			int AStarValue = heuristicValue + newCostToRoot;
+			right.setAStarCost(AStarValue);
 			right.setHeuristicValue(heuristicValue);
 			stateSpace.add(right);
 		}
@@ -421,6 +426,8 @@ public class MissionImpossible extends SearchProblem {
 			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(carry, imfMembers, newHealth.split(","), carry.getOperator());
 			}
+			int AStarValue = heuristicValue + newCostToRoot;
+			carry.setAStarCost(AStarValue);
 			carry.setHeuristicValue(heuristicValue);
 			stateSpace.add(carry);
 		}
@@ -448,6 +455,8 @@ public class MissionImpossible extends SearchProblem {
 			} else if (heuristicFlag == 2) {
 				heuristicValue = heuristicFunction_2(drop, imfMembers, newHealth.split(","), drop.getOperator());
 			}
+			int AStarValue = heuristicValue + newCostToRoot;
+			drop.setAStarCost(AStarValue);
 			drop.setHeuristicValue(heuristicValue);
 			stateSpace.add(drop);
 		}
