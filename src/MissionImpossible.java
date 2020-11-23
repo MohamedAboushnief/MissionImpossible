@@ -496,8 +496,6 @@ public class MissionImpossible extends SearchProblem {
 	public static String solve(String grid, String strategy, boolean visualize) {
 		String output = "";
 
-		MissionImpossible m = new MissionImpossible();
-
 		String totalHealth = grid.split(";")[4]; // Get all IMF members health
 		String submarine = grid.split(";")[2]; // Get the submarine location
 		String ethan = grid.split(";")[1]; // Get Ethan position
@@ -519,40 +517,46 @@ public class MissionImpossible extends SearchProblem {
 
 		int membersNum = members.length;
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
-		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "GR2", totalHealth, CarriedPositions);
-		System.out.print(Greedy2(init, grid, goal));
+		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, strategy, totalHealth, CarriedPositions);
+
 		if (strategy.equals("BF")) {
 			output = BFS(init, grid, goal);
 		} else if (strategy.equals("DF")) {
-			
+
 			MissionImpossible newMission = new MissionImpossible();
 			output = DFS(init, grid, goal, 10000000, newMission);
 		} else if (strategy.equals("ID")) {
-			
+
 			output = ID(init, grid, goal, 10000);
 		} else if (strategy.equals("UC")) {
-			
+
 			output = UCS(init, grid, goal);
 		} else if (strategy.equals("GR1")) {
-			
+
 			output = Greedy1(init, grid, goal);
 		} else if (strategy.equals("GR2")) {
-			
-			output = Greedy2(init, grid, goal);
 
+			output = Greedy2(init, grid, goal);
 		} else if (strategy.equals("AS1")) {
 
+			output = AS1(init, grid, goal);
 		} else if (strategy.equals("AS2")) {
 
+			output = AS2(init, grid, goal);
 		}
-		
+		if (visualize) {
+			gui visualization = new gui(grid, output.split(";")[0]);
+		}
+
 		return output;
 	}
 
 	public static void main(String[] args) {
 
-		String test = genGrid();
-		System.out.println(test);
+		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
+		System.out.println(solve(grid, "UC", false));
+		
+		//System.out.println(test);
 
 	}
 }
