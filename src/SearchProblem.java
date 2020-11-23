@@ -29,9 +29,9 @@ public abstract class SearchProblem {
 //			}
 			counter++;
 			System.out.println(counter);
-			if (threshold != -1 && threshold <= searchTreeNodesStack.peek().getDepth() && searchTreeNodesStack.peek().getDepth() != 0) {
-//				return "No solution";
-				break;
+			if (threshold <= searchTreeNodesStack.peek().getDepth() && searchTreeNodesStack.peek().getDepth() != 0) {
+				return "No solution";
+//				break;
 			}
 //			searchTreeNodesStack.peek().getState()[4] = "0,0";
 //			searchTreeNodesStack.peek().getState()[4] = "0,0";
@@ -384,6 +384,22 @@ public abstract class SearchProblem {
 		return tempState;
 	}
 	
+	public static String ID(SearchTreeNode intialState, String grid, String[] goalState, int threshold) {
+		int thresholdCounter = 0;
+		String gridCopy = grid;
+		SearchTreeNode intialCopy = intialState;
+		while (thresholdCounter <= threshold) {
+			MissionImpossible m = new MissionImpossible();
+			String DFSReturn = DFS(intialCopy, gridCopy, goalState, thresholdCounter, m);
+			if (!DFSReturn.equals("No solution")) {
+				return DFSReturn;
+			} else {
+				System.out.println(thresholdCounter + "counter");
+				thresholdCounter++;
+			}
+		}
+		return "No solution";
+	}
 	
 	
 
@@ -414,7 +430,7 @@ public abstract class SearchProblem {
 		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
 		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "UC");
 		//System.out.print(Greedy1(init, grid, goal));
-		System.out.print(UCS(init, grid, goal));
+		System.out.print(ID(init, grid, goal, 100000));
 
 	}
 

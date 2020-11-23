@@ -14,19 +14,27 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import com.sun.media.sound.Toolkit;
 import com.sun.tools.javac.launcher.Main;
 
+import jdk.internal.platform.Container;
+
 public class gui {
 
-	public static Object[] drawPanel(String grid, String output, JPanel panel) {
+	public gui(String grid, String output) {
+		layout(grid, output);
+	}
+
+	public Object[] drawPanel(String grid, String output, JPanel panel) {
 		int numberInX = (Integer.parseInt(grid.split(";")[0].split(",")[0]));
 		int numberInY = (Integer.parseInt(grid.split(";")[0].split(",")[1]));
 		String totalHealth = grid.split(";")[4];
@@ -41,21 +49,21 @@ public class gui {
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
 		for (int i = 0; i < numberInX; i++) {
 			for (int j = 0; j < numberInY; j++) {
+				 Border blackBorder = BorderFactory.createLineBorder(Color.black);
 				label = new JLabel();
 				panel.add(label);
 				label.setOpaque(true);
+				label.setBorder(blackBorder);
+				label.setBackground(Color.green);
 				if (ethanX == i && ethanY == j) {
-//					label.setBackground(Color.cyan);
-					label.setText("ethan");
-					ethansLabel.setText("ethan");
+					ImageIcon img = new ImageIcon(this.getClass().getResource("soldier.png"));
+					label.setIcon(img);
 				} else if (submarineX == i && submarineY == j) {
-//					label.setBackground(Color.blue);
-					label.setText("submarine");
+					ImageIcon img = new ImageIcon(this.getClass().getResource("submarine.png"));
+					label.setIcon(img);
 				} else if (gridArray.contains(i + "," + j)) {
-//					label.setBackground(Color.red);
-					label.setText("imf");
-				} else {
-//					label.setBackground(Color.black);
+					ImageIcon img = new ImageIcon(this.getClass().getResource("soldier (1).png"));
+					label.setIcon(img);
 				}
 				labels.add(label);
 			}
@@ -64,12 +72,13 @@ public class gui {
 		return returned;
 	}
 
-	public static void layout(String grid, String output) {
+	public void layout(String grid, String output) {
 		JFrame frame = new JFrame("Grid Layout");
 		String newGrid = grid;
 		for (int i = 0; i < output.split(",").length; i++) {
 			JPanel panel = new JPanel();
-			frame.add((JPanel) drawPanel(newGrid, output, panel)[0]);
+			frame.add((JPanel) this.drawPanel(newGrid, output, panel)[0]);
+			frame.getContentPane().setBackground(Color.BLACK);
 			frame.setSize(1000, 1000);
 			frame.setVisible(true);
 //			try {
@@ -77,7 +86,6 @@ public class gui {
 //			} catch (InterruptedException e) {
 //				e.printStackTrace();
 //			}
-			System.out.println(output.split(",")[i]);
 			if (output.split(",")[i].equals("Up")) {
 				String tmp = newGrid.split(";")[0];
 				tmp += ";";
@@ -96,7 +104,6 @@ public class gui {
 					tmp += ";";
 					tmp += newGrid.split(";")[5];
 				}
-				System.out.println(tmp);
 				newGrid = tmp;
 			}
 			if (output.split(",")[i].equals("Down")) {
@@ -117,7 +124,6 @@ public class gui {
 					tmp += ";";
 					tmp += newGrid.split(";")[5];
 				}
-				System.out.println(tmp);
 				newGrid = tmp;
 			}
 			if (output.split(",")[i].equals("Right")) {
@@ -138,7 +144,6 @@ public class gui {
 					tmp += ";";
 					tmp += newGrid.split(";")[5];
 				}
-				System.out.println(tmp);
 				newGrid = tmp;
 			}
 			if (output.split(",")[i].equals("Left")) {
@@ -159,7 +164,6 @@ public class gui {
 					tmp += ";";
 					tmp += newGrid.split(";")[5];
 				}
-				System.out.println(tmp);
 				newGrid = tmp;
 			}
 			if (output.split(",")[i].equals("Carry")) {
@@ -194,9 +198,4 @@ public class gui {
 
 	}
 
-	public static void main(String args[]) {
-		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
-		String output = "Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Down,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Up,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Down,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Up,Carry,Right,Right,Right,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Carry,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Carry,Right,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Carry,Right,Right,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Carry,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Carry,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Carry,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Carry,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Up,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Up,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Carry,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Right,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Down,Drop";
-		layout(grid, output);
-	}
 }
