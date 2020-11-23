@@ -11,36 +11,35 @@ import java.util.Queue;
 import java.util.*;
 
 public abstract class SearchProblem {
-
-	public static String DFS(SearchTreeNode intialState, String grid, String[] goalState) {
+	
+	public static String DFS(SearchTreeNode intialState, String grid, String[] goalState, int threshold,
+			MissionImpossible m) {
 		ArrayList<String[]> ancestors = new ArrayList<String[]>();
 		String output = "";
+		int counter = 0;
 		Stack<SearchTreeNode> searchTreeNodesStack = new Stack<SearchTreeNode>();
 		if (intialState == null) {
 			return output;
 		}
 		searchTreeNodesStack.push(intialState);
-		int counter = 0;
 		while (true) {
-			searchTreeNodesStack.peek().getState()[4] = "0,0";
+			counter++;
+			if (threshold <= searchTreeNodesStack.peek().getDepth() && searchTreeNodesStack.peek().getDepth() != 0) {
+				return "No solution";
+			}
 			ancestors.add(searchTreeNodesStack.peek().getState());
-			if (searchTreeNodesStack.peek().getOperator() != null) {
-				output += searchTreeNodesStack.peek().getOperator();
-			}
-			for (int k = 0; k < searchTreeNodesStack.peek().getState().length; k++) {
-				System.out.print(searchTreeNodesStack.peek().getState()[k] + ",");
-			}
-			ArrayList<SearchTreeNode> x = MissionImpossible.stateTransition(searchTreeNodesStack.pop(), grid, 0);
+			ArrayList<SearchTreeNode> x = m.stateTransition(searchTreeNodesStack.pop(), grid, 0);
 			for (int i = 0; i < x.size(); i++) {
-				System.out.println(x.get(i).getOperator() + "operator");
 				searchTreeNodesStack.push(x.get(i));
 			}
+			boolean goalFound = false;
 			for (int i = 0; i < searchTreeNodesStack.size(); i++) {
 				SearchTreeNode y = searchTreeNodesStack.peek();
-				System.out.println();
 				boolean found = false;
 				for (int j = 0; j < ancestors.size(); j++) {
-					if (Arrays.equals(y.getState(), ancestors.get(j))) {
+					if (y.getState()[0].equals(ancestors.get(j)[0]) && y.getState()[1].equals(ancestors.get(j)[1])
+							&& y.getState()[2].equals(ancestors.get(j)[2])
+							&& y.getState()[3].equals(ancestors.get(j)[3])) {
 						found = true;
 						break;
 					}
@@ -48,15 +47,26 @@ public abstract class SearchProblem {
 				if (found) {
 					searchTreeNodesStack.pop();
 				} else {
-					if (Arrays.equals(y.getState(), goalState)) {
-						output += y.getOperator();
-						return output;
+					if (y.getState()[0].equals(goalState[0]) && y.getState()[1].equals(goalState[1])
+							&& y.getState()[2].equals(goalState[2]) && y.getState()[3].equals(goalState[3])) {
+						goalFound = true;
+						break;
 					} else {
 						break;
 					}
 				}
 			}
+			if(goalFound) {
+				break;
+			}
 		}
+		SearchTreeNode current= searchTreeNodesStack.peek();
+		while(current.getParentNode() != null) {
+			output = current.getOperator() + "," + output;
+			current = current.getParentNode();
+		}
+		output = output.substring(0, output.length() -1);
+		return output;
 	}
 
 	public static String Greedy1(SearchTreeNode initialState, String grid, String[] goal) {
@@ -177,7 +187,6 @@ public abstract class SearchProblem {
 			takeLessHeuristic.add(tempArray.get(0));
 
 			tempArray.remove(tempArray.get(0));
-
 			boolean found = false;
 			SearchTreeNode checkNode = takeLessHeuristic.peek();
 
@@ -262,7 +271,8 @@ public abstract class SearchProblem {
 			current = current.getParentNode();
 
 		}
-		return output + exploredNodes;
+		output = output.substring(0, output.length() -1);
+		return output;
 	}
 
 	public static boolean CheckGoal(SearchTreeNode currentNode, String[] goalState) {
@@ -370,6 +380,29 @@ public abstract class SearchProblem {
 		String tempState = state[0] + "," + state[1] + "," + state[2] + "," + state[3];
 		return tempState;
 	}
+	
+	public static String ID(SearchTreeNode intialState, String grid, String[] goalState, int threshold) {
+		int thresholdCounter = 0;
+		String gridCopy = grid;
+		SearchTreeNode intialCopy = intialState;
+		while (thresholdCounter <= threshold) {
+			MissionImpossible m = new MissionImpossible();
+			String DFSReturn = DFS(intialCopy, gridCopy, goalState, thresholdCounter, m);
+			if (!DFSReturn.equals("No solution")) {
+				return DFSReturn;
+			} else {
+				System.out.println(thresholdCounter + "counter");
+				thresholdCounter++;
+			}
+		}
+		return "No solution";
+	}
+	
+	
+
+//	public static String AStar(SearchTreeNode intialState, String grid, String[] goalState, MissionImpossible m) {
+//		
+//	}
 
 	public static void main(String[] args) {
 		MissionImpossible m = new MissionImpossible();
