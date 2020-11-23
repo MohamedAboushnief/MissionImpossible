@@ -519,41 +519,8 @@ public abstract class SearchProblem {
 			}
 
 		}
-
 	}
-
-	public static void main(String[] args) {
-		MissionImpossible m = new MissionImpossible();
-//		String grid = "15,15;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-//		String grid = "15,15;5,10;14,14;0,0,0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8;81,13,40,38,52,63,66,36,13;1";
-		String grid = "5,5;1,2;4,0;0,3,2,1,3,0,3,2,3,4,4,3;20,30,90,80,70,60;3";
-
-		String totalHealth = grid.split(";")[4];
-		String submarine = grid.split(";")[2];
-		String ethan = grid.split(";")[1];
-		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0" };
-//		String[] goal = {"1","4","6","0","6,16,76,66,56,46"};
-		String CarriedPositions = "";
-		String[] members = grid.split(";")[3].split("(?<!\\G\\d+),");
-		String mem = "";
-		for (int i = 0; i < members.length; i++) {
-			if (i != 0) {
-				mem += "," + members[i];
-			} else {
-				mem += members[i];
-			}
-			CarriedPositions += "0";
-		}
-
-		int membersNum = members.length;
-		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
-//		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "UC", totalHealth, CarriedPositions);
-
-		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "AS1", totalHealth, CarriedPositions);
-
-		// System.out.print(Greedy1(init, grid, goal));
-		System.out.print(DFS(init, grid, goal, 10000, m));
-
-	}
-
 }
+
+
+
