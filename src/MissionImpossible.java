@@ -484,6 +484,62 @@ public class MissionImpossible extends SearchProblem {
 		return false;
 	}
 
+	public static String solve(String grid, String strategy, boolean visualize) {
+		String output = "";
+
+		MissionImpossible m = new MissionImpossible();
+
+		String totalHealth = grid.split(";")[4]; // Get all IMF members health
+		String submarine = grid.split(";")[2]; // Get the submarine location
+		String ethan = grid.split(";")[1]; // Get Ethan position
+		String[] goal = { submarine.split(",")[0], submarine.split(",")[1], "0", "0" }; // Goal state is when there is
+																						// no IMF members remaining and
+																						// Ethan is in the submarine
+
+		String CarriedPositions = "";
+		String[] members = grid.split(";")[3].split("(?<!\\G\\d+),");
+		String mem = "";
+		for (int i = 0; i < members.length; i++) {
+			if (i != 0) {
+				mem += "," + members[i];
+			} else {
+				mem += members[i];
+			}
+			CarriedPositions += "0";
+		}
+
+		int membersNum = members.length;
+		String[] state = { ethan.split(",")[0], ethan.split(",")[1], "" + membersNum, "0", totalHealth, mem };
+		SearchTreeNode init = new SearchTreeNode(state, null, null, 0, 0, 0, "GR2", totalHealth, CarriedPositions);
+		System.out.print(Greedy2(init, grid, goal));
+		if (strategy.equals("BF")) {
+			output = BFS(init, grid, goal);
+		} else if (strategy.equals("DF")) {
+			
+			MissionImpossible newMission = new MissionImpossible();
+			output = DFS(init, grid, goal, 10000000, newMission);
+		} else if (strategy.equals("ID")) {
+			
+			output = ID(init, grid, goal, 10000);
+		} else if (strategy.equals("UC")) {
+			
+			output = UCS(init, grid, goal);
+		} else if (strategy.equals("GR1")) {
+			
+			output = Greedy1(init, grid, goal);
+		} else if (strategy.equals("GR2")) {
+			
+			output = Greedy2(init, grid, goal);
+
+		} else if (strategy.equals("AS1")) {
+
+		} else if (strategy.equals("AS2")) {
+
+		}
+		
+		return output;
+	}
+
 	public static void main(String[] args) {
 
 		String test = genGrid();
